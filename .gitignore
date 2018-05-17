@@ -1,0 +1,7 @@
+npm-debug.log
+yarn-error.log
+node_modules
+.DS_Store
+/test/coverage/
+/.vscode
+/.idea
