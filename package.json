@@ -9,6 +9,12 @@
     "type": "git",
     "url": "git+https://github.com/Patcher56/vue-flowy.git"
   },
+  "keywords": [
+    "flowcharts",
+    "diagrams",
+    "vuejs",
+    "component"
+  ],
   "files": [
     "dist",
     "src"
