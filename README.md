@@ -74,7 +74,7 @@ export default {
 
 ## License
 
-Vue-Numeric is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+Vue-Flowy is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
 
 ## Support
 Hello, I'm Patrick the maintainer of this project in my free time (which is getting lessen these days), if this project does help you in any way please consider to support me. Thanks :smiley:
