@@ -72,6 +72,40 @@ export default {
 |-----|-----------|--------|----|-------|
 |chart|The Chart data (type of FlowChart)|true|FlowChart|-|
 
+## API
+Every FlowChart starts by creating a new **FlowChart** instance with the `FlowChart` class:
+
+### FlowChart
+```vue
+data() {
+  return {
+    chart: new FlowChart()
+  }
+}
+```
+
+Now you can work with the new chart variable
+
+#### \<FlowChart>.addElement(id, [options])
+Used to add nodes to the chart. Every node needs an id, so this field is required.
+**returns** class FlowElement
+
+Available options are:
+|option|Description|Type|Default|
+|------|-----------|----|-------|
+|label|A label which shows up on the node|string|''|
+
+### FlowElement
+A FlowElement is returned by \<FlowChart>.addElement. It represents one node
+
+#### \<FlowElement>.leadsTo(\<FlowElement>, [options])
+Used to connect two elements with an edge.
+
+Available options are:
+|option|Description|Type|Default|
+|------|-----------|----|-------|
+|label|A label which shows up on the edge|string|''|
+
 ## License
 
 Vue-Flowy is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
