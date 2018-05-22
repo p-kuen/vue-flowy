@@ -20,6 +20,7 @@ export default {
   },
   watch: {
     'chart.elements': function(newVal, oldVal) {
+      console.log('rendering chart')
       this.chart.render(this.chartElement)
     }
   },

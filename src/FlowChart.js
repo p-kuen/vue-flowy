@@ -30,7 +30,6 @@ export default class FlowChart {
         rankdir: 'LR',
         marginx: 20,
         marginy: 20
-
       })
       .setDefaultEdgeLabel(function () {
         return {}
@@ -56,9 +55,15 @@ export default class FlowChart {
     for (const i in this.elements) {
       const el = this.elements[i]
       for (const k in el.edges) {
-        const edge = this.elements[i].edges[k]
+        const edge = el.edges[k]
         console.log('connecting', el.id, 'with', edge)
-        g.setEdge(el.id, edge)
+        const edgeData = {}
+
+        if (edge.options.label) {
+          edgeData.label = edge.options.label
+        }
+
+        g.setEdge(el.id, edge.otherId, edgeData)
       }
     }
 
@@ -66,5 +71,8 @@ export default class FlowChart {
 
     const e = d3.select('#f' + element.id + ' g')
     render(e, g)
+    const svgElement = document.getElementById('f' + element.id)
+    const groupElement = svgElement.querySelector('g')
+    svgElement.style.width = groupElement.getBoundingClientRect().width + 40
   }
 }

@@ -5,8 +5,8 @@ export default class FlowElement {
     this.edges = []
   }
 
-  leadsTo(destinationElement) {
-    this.edges.push(destinationElement.id)
+  leadsTo(destinationElement, options) {
+    this.edges.push({otherId: destinationElement.id, options})
     return destinationElement
   }
 }

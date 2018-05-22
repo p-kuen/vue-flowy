@@ -60,7 +60,7 @@ export default {
     const A = this.chart.addElement('A')
     const B = this.chart.addElement('B')
     const C = this.chart.addElement('C')
-    A.leadsTo(B).leadsTo(C)
+    A.leadsTo(B).leadsTo(C, {label: 'label'})
     A.leadsTo(C)
   },
 }
