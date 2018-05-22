@@ -64,10 +64,11 @@ export default {
     chart: new FlowChart()
   }),
   mounted() {
-    const A = this.chart.addElement('A')
-    const B = this.chart.addElement('B')
-    const C = this.chart.addElement('C')
-    A.leadsTo(B).leadsTo(C, {label: 'label'})
+    const idea = this.chart.addElement('idea')
+    const A = this.chart.addElement('A', {label: 'vscode'})
+    const B = this.chart.addElement('B', {label: 'github'})
+    const C = this.chart.addElement('C', {label: 'npm'})
+    idea.leadsTo(A).leadsTo(B)
     A.leadsTo(C)
   },
 }
@@ -100,7 +101,7 @@ Used to add nodes to the chart. Every node needs an id, so this field is require
 Available options are:
 |option|Description|Type|Default|
 |------|-----------|----|-------|
-|label|A label which shows up on the node|string|''|
+|label|A label which shows up on the node|string|id|
 
 ### FlowElement
 A FlowElement is returned by \<FlowChart>.addElement. It represents one node
