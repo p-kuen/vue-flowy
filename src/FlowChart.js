@@ -75,5 +75,6 @@ export default class FlowChart {
     const svgElement = document.getElementById('f' + element.id)
     const groupElement = svgElement.querySelector('g')
     svgElement.style.width = groupElement.getBoundingClientRect().width + 40
+    svgElement.style.height = groupElement.getBoundingClientRect().height + 40
   }
 }
