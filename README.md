@@ -20,8 +20,7 @@ $ npm install vue-flowy --save
 
 #### Register as Component
 ```js
-import Vue from 'vue'
-import VueFlowy from 'vue-flowy'
+import {VueFlowy} from 'vue-flowy'
 
 export default {
   name: 'App',
@@ -30,6 +29,14 @@ export default {
     VueFlowy
   }
 }
+```
+
+#### Register as plugin
+```js
+import Vue from 'vue'
+import {VueFlowy} from 'vue-flowy'
+
+Vue.use(VueFlowy)
 ```
 
 ## Usage
