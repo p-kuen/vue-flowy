@@ -35,13 +35,15 @@ export default class FlowChart {
         return {}
       })
 
-    console.log(this.elements)
-
     // first create all nodes
     for (const i in this.elements) {
       const el = this.elements[i]
-      console.log('creating node no', i)
-      g.setNode(el.id, {label: 'node'})
+      const elData = {}
+
+      if (el.options && el.options.label) {
+        elData.label = el.options.label
+      }
+      g.setNode(el.id, elData)
     }
 
     // now apply some styles to all nodes
@@ -56,10 +58,9 @@ export default class FlowChart {
       const el = this.elements[i]
       for (const k in el.edges) {
         const edge = el.edges[k]
-        console.log('connecting', el.id, 'with', edge)
         const edgeData = {}
 
-        if (edge.options.label) {
+        if (edge.options && edge.options.label) {
           edgeData.label = edge.options.label
         }
 
