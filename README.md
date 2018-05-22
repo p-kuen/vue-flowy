@@ -41,7 +41,7 @@ Vue.use(VueFlowy)
 
 ## Usage
 
-<!-- screenshot here -->
+![screenshot](screenshot.png "Screenshot of a simple VueFlowy Chart")
 
 ### Quick example
 
