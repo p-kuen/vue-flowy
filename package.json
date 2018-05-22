@@ -1,6 +1,6 @@
 {
   "name": "vue-flowy",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Flowcharts with vuejs on the highest standards",
   "types": "types/index.d.ts",
   "module": "dist/vue-flowy.es.js",
