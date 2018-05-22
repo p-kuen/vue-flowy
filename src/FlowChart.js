@@ -40,6 +40,8 @@ export default class FlowChart {
       const el = this.elements[i]
       const elData = {}
 
+      elData.label = el.id
+
       if (el.options && el.options.label) {
         elData.label = el.options.label
       }
