@@ -4,7 +4,7 @@
   "scripts": {
     "build": "vue-cli-service build --target lib src/main.js",
     "lint": "vue-cli-service lint",
-    "dev": "vue-cli-service build --watch --target lib src/main.js",
+    "dev": "vue-cli-service build --mode development --name vue-flowy --watch --target lib src/main.js",
     "precommit": "lint-staged",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
