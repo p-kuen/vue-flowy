@@ -1,6 +1,6 @@
 {
   "name": "vue-flowy",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "scripts": {
     "build": "vue-cli-service build --target lib src/main.js",
     "lint": "vue-cli-service lint",
