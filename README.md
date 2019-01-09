@@ -99,6 +99,7 @@ Used to add nodes to the chart. Every node needs an id, so this field is require
 **returns** class FlowElement
 
 Available options are:
+
 |option|Description|Type|Default|
 |------|-----------|----|-------|
 |label|A label which shows up on the node|string|id|
@@ -110,6 +111,7 @@ A FlowElement is returned by \<FlowChart>.addElement. It represents one node
 Used to connect two elements with an edge.
 
 Available options are:
+
 |option|Description|Type|Default|
 |------|-----------|----|-------|
 |label|A label which shows up on the edge|string|''|
