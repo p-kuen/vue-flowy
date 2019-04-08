@@ -1,6 +1,6 @@
 {
   "name": "vue-flowy",
-  "version": "0.2.0-alpha6",
+  "version": "0.2.0-alpha6.1",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:ts": "tsc -p tsconfig-lib.json",
@@ -9,6 +9,9 @@
   },
   "main": "dist/VueFlowy.js",
   "types": "dist/VueFlowy.d.ts",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "d3": "^5.9.2",
     "dagre-d3-renderer": "^0.5.8",
