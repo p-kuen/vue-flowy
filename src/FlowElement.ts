@@ -1,5 +1,4 @@
 import { FlowChartElementOptions } from './FlowChart';
-import { ValueFn, BaseType } from 'd3';
 
 export interface FlowElementEdgeOptions {
   label?: string
@@ -12,7 +11,7 @@ export interface FlowElementEdge {
 
 export interface FlowElementListener {
   event: string
-  callback: ValueFn<BaseType, {}, void>
+  callback: () => void
 }
 
 export const flowElementsById: Record<string, FlowElement> = {}
@@ -46,7 +45,7 @@ export class FlowElement {
     flowElementsById[this.id] = this
   }
 
-  on(event: string, callback: ValueFn<BaseType, {}, void>) {
+  on(event: string, callback: () => void) {
     this.listeners.push({event, callback})
   }
 }

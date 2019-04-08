@@ -1,6 +1,7 @@
 {
   "name": "vue-flowy",
   "version": "0.2.0-beta1",
+  "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:ts": "tsc -p tsconfig-lib.json",
