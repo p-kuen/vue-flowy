@@ -4,17 +4,28 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "build:ts": "tsc -p tsconfig-lib.json",
+    "build:vue": "vue-cli-service build --target lib src/VueFlowy.ts",
+    "build": "yarn build:ts && yarn build:vue"
   },
+  "main": "dist/VueFlowy.js",
+  "types": "dist/VueFlowy.d.ts",
   "dependencies": {
-    "vue": "^2.6.6",
-    "vue-class-component": "^6.0.0",
-    "vue-property-decorator": "^8.0.0"
+    "d3": "^5.9.2",
+    "dagre-d3-renderer": "^0.5.8",
+    "graphlibrary": "^2.2.0"
   },
   "devDependencies": {
+    "@types/d3": "^5.7.2",
     "@vue/cli-plugin-typescript": "^3.5.0",
     "@vue/cli-service": "^3.5.0",
     "typescript": "^3.2.1",
-    "vue-template-compiler": "^2.5.21"
+    "vue-template-compiler": "^2.5.21",
+    "vue": "^2.6.10",
+    "vue-class-component": "^6.0.0",
+    "vue-property-decorator": "^8.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.10"
   }
 }
