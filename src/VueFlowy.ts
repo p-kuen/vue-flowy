@@ -13,7 +13,9 @@ export class VueFlowy extends Vue {
   private chartElement: HTMLElement | null = null;
 
   public render(h: CreateElement) {
-    return h('div', {class: "flow-chart", ref: 'flowyChart'})
+    return h('div', {class: "flow-chart", ref: 'flowyChart'}, [
+      h('style', '.flow-chart > svg {display: block;} .flow-chart .node rect {stroke: #999; fill: #fff; stroke-width: 1.5px;} .flow-chart .edgePath path {stroke: #333; stroke-width: 1.5px;}')
+    ])
   }
 
   @Watch('chart.elements')
