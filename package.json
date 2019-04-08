@@ -1,6 +1,6 @@
 {
   "name": "vue-flowy",
-  "version": "0.2.0-alpha6.1",
+  "version": "0.2.0-alpha6.2",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:ts": "tsc -p tsconfig-lib.json",
