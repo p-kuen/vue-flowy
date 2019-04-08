@@ -36,7 +36,7 @@ export default {
 import Vue from 'vue'
 import {VueFlowy} from 'vue-flowy'
 
-Vue.use(VueFlowy)
+Vue.component(VueFlowy)
 ```
 
 ## Usage
@@ -70,6 +70,10 @@ export default {
     const C = this.chart.addElement('C', {label: 'npm'})
     idea.leadsTo(A).leadsTo(B)
     A.leadsTo(C)
+
+    A.on('click', function() {
+      console.log('click!')
+    })
   },
 }
 </script>
@@ -91,6 +95,11 @@ data() {
   }
 }
 ```
+
+The creation currently allows the following options:
+|option|Description|Type|Default|
+|------|-----------|----|-------|
+|direction|The direction in which the chart is built. Can be LR, TB, BT, RL|string|LR|
 
 Now you can work with the new chart variable
 
@@ -116,9 +125,12 @@ Available options are:
 |------|-----------|----|-------|
 |label|A label which shows up on the edge|string|''|
 
+#### \<FlowElement>.on(event, callback)
+Used to add events to FlowElements. Can be any event.
+
 ## License
 
 Vue-Flowy is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
 
 ## Support
-Hello, I'm Patrick the maintainer of this project in my free time (which is getting lessen these days), if this project does help you in any way please consider to support me. Thanks :smiley:
+Hello, I'm Patrick the maintainer of this project in my free time (which is getting lessen these days), if this project does help you in any way please consider to support me with pull requests. Thanks :smiley:
