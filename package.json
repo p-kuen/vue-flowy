@@ -1,7 +1,6 @@
 {
-  "name": "vue-flowy-ts",
-  "version": "0.1.0",
-  "private": true,
+  "name": "vue-flowy",
+  "version": "0.2.0-alpha5",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build:ts": "tsc -p tsconfig-lib.json",
@@ -13,7 +12,8 @@
   "dependencies": {
     "d3": "^5.9.2",
     "dagre-d3-renderer": "^0.5.8",
-    "graphlibrary": "^2.2.0"
+    "graphlibrary": "^2.2.0",
+    "vue-property-decorator": "^8.0.0"
   },
   "devDependencies": {
     "@types/d3": "^5.7.2",
@@ -22,8 +22,7 @@
     "typescript": "^3.2.1",
     "vue-template-compiler": "^2.5.21",
     "vue": "^2.6.10",
-    "vue-class-component": "^6.0.0",
-    "vue-property-decorator": "^8.0.0"
+    "vue-class-component": "^6.0.0"
   },
   "peerDependencies": {
     "vue": "^2.6.10"
