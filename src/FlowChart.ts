@@ -7,13 +7,17 @@ export interface FlowChartElementOptions {
   label?: string
 }
 
+export interface FlowChartOptions {
+  direction: 'LR' | 'TB' | 'BT' | 'RL'
+}
+
 export class FlowChart {
-  options = {
+  options: FlowChartOptions = {
     direction: 'LR'
   }
   elements: FlowElement[] = []
 
-  constructor(options = {}) {
+  constructor(options?: FlowChartOptions) {
     this.options = Object.assign(this.options, options)
   }
 
@@ -55,18 +59,12 @@ export class FlowChart {
         elData.label = el.options.label
       }
       g.setNode(el.id, elData)
-    }
+      const node = g.node(el.id)
 
-    // now apply some styles to all nodes
-    g.nodes().forEach(function(v) {
-      var node = g.node(v)
-      // Round the corners of the node
+      // apply some styles
       node.rx = node.ry = 5
-    });
 
-    // now create all edges
-    for (const i in this.elements) {
-      const el = this.elements[i]
+      // now create all edges
       for (const k in el.edges) {
         const edge = el.edges[k]
         const edgeData: FlowElementEdgeOptions = {}
@@ -84,6 +82,24 @@ export class FlowChart {
     const e = select('#f' + element.id + ' g')
     render(e, g)
     const svgElement = document.getElementById('f' + element.id)
+
+    // now add the listeners after render
+    e.selectAll('g.node')
+      .each(function(v) {
+        // get the flow element from the id
+        const el = FlowElement.getById(v as string)
+
+        if (!el) {
+          throw new Error('Element with id ' + v + ' is not defined!')
+        }
+
+        const d3Node = select(this)
+
+        // now loop all listeners
+        for (const listener of el.listeners) {
+          d3Node.on(listener.event, listener.callback)
+        }
+      })
 
     if (!svgElement) {
       throw new Error('svgElement is null!')
