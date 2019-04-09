@@ -45,6 +45,8 @@ Vue.component(VueFlowy)
 
 ### Quick example
 
+See a demo on CodeSandbox(https://codesandbox.io/embed/4x5lwo8747)
+
 ```vue
 <template>
   <VueFlowy :chart='chart'></VueFlowy>
