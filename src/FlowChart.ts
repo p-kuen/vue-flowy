@@ -27,6 +27,10 @@ export class FlowChart {
     return el
   }
 
+  destroy() {
+    this.elements.forEach((element) => { element.unregister() })
+  }
+
   render(element: HTMLElement) {
     const svg = select(element)
       .append('svg')
