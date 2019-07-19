@@ -37,6 +37,10 @@ export class FlowElement {
     return destinationElement
   }
 
+  unregister() {
+    delete flowElementsById[this.id]
+  }
+
   private register() {
     if (flowElementsById[this.id]) {
       throw new Error('ID ' + this.id + 'is already registered!')
