@@ -3,8 +3,8 @@
 [![npm](https://img.shields.io/npm/v/vue-flowy.svg?style=flat-square)](https://www.npmjs.com/package/vue-flowy)
 [![npm](https://img.shields.io/npm/dt/vue-flowy.svg?style=flat-square)](https://www.npmjs.com/package/vue-flowy)
 [![npm](https://img.shields.io/npm/dm/vue-flowy.svg?style=flat-square)](https://www.npmjs.com/package/vue-flowy)
-[![Build Status](https://img.shields.io/travis/patcher56/vue-flowy.svg?style=flat-square)](https://travis-ci.org/patcher56/vue-flowy)
-[![Codecov](https://img.shields.io/codecov/c/github/patcher56/vue-flowy.svg?style=flat-square)](https://codecov.io/gh/patcher56/vue-flowy)
+<!--[![Build Status](https://img.shields.io/travis/patcher56/vue-flowy.svg?style=flat-square)](https://travis-ci.org/patcher56/vue-flowy)
+[![Codecov](https://img.shields.io/codecov/c/github/patcher56/vue-flowy.svg?style=flat-square)](https://codecov.io/gh/patcher56/vue-flowy)-->
 [![npm](https://img.shields.io/npm/l/vue-flowy.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 
 Smart flowchart creation based on [Vue](https://vuejs.org/).
