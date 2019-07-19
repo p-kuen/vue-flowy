@@ -18,6 +18,11 @@ Smart flowchart creation based on [Vue](https://vuejs.org/).
 $ npm install vue-flowy --save
 ```
 
+### Install via yarn
+```sh
+$ yarn add vue-flowy
+```
+
 #### Register as Component
 ```js
 import {VueFlowy} from 'vue-flowy'
@@ -133,6 +138,31 @@ Used to add events to FlowElements. Can be any event.
 ## License
 
 Vue-Flowy is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+
+## Contributing
+
+As my time is limited, I would be happy if someone contributes to this project. Simply clone the repo and start developing.
+At the end run `yarn build` to build the package to test it.
+
+Then link the package using `yarn link`
+As vue is a peer dependency, I also had to link vue for development and testing:
+```sh
+cd node_modules/vue
+yarn link
+cd ../../
+```
+
+Now go into the example directory and use the links there
+```sh
+cd example
+yarn link "vue-flowy"
+yarn link "vue"
+```
+
+Now run the app to test it out
+```sh
+yarn serve
+```
 
 ## Support
 Hello, I'm Patrick the maintainer of this project in my free time (which is getting lessen these days), if this project does help you in any way please consider to support me with pull requests. Thanks :smiley:
