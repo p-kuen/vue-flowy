@@ -15,7 +15,13 @@ export default {
   },
   data: function() {
     return {
-      chart: new FlowChart({ direction: "LR" })
+      chart: new FlowChart({
+        direction: "LR",
+        wordWrap: {
+          indent: '',
+          width: 9
+        }
+      })
     };
   },
   mounted() {
@@ -24,8 +30,14 @@ export default {
     const A = this.chart.addElement("A", { label: "vscode" });
     const B = this.chart.addElement("B", { label: "github" });
     const C = this.chart.addElement("C", { label: "npm" });
+    const D = this.chart.addElement("D", {
+      label: "not sure what else",
+      rectStyle: { fill: "#444" },
+      textStyle: { fill: "white" }
+    });
     idea.leadsTo(A).leadsTo(B);
     A.leadsTo(C);
+    A.leadsTo(D);
 
     A.on("click", function() {
       console.log("click!");
