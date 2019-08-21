@@ -2,13 +2,17 @@ import {Graph} from 'graphlibrary'
 import d3Renderer from 'dagre-d3-renderer'
 import {FlowElement, FlowElementEdgeOptions} from './FlowElement'
 import {select} from 'd3'
+import wrap from 'word-wrap'
 
 export interface FlowChartElementOptions {
-  label?: string
+  label?: string,
+  rectStyle?: ElementCSSInlineStyle,
+  textStyle?: ElementCSSInlineStyle
 }
 
 export interface FlowChartOptions {
   direction: 'LR' | 'TB' | 'BT' | 'RL'
+  wordWrap?: wrap.IOptions
 }
 
 export class FlowChart {
@@ -60,7 +64,11 @@ export class FlowChart {
       }
 
       if (el.options && el.options.label) {
-        elData.label = el.options.label
+        if (this.options.wordWrap) {
+          elData.label = wrap(el.options.label, this.options.wordWrap)
+        } else {
+          elData.label = el.options.label
+        }
       }
       g.setNode(el.id, elData)
       const node = g.node(el.id)
@@ -97,9 +105,23 @@ export class FlowChart {
           throw new Error('Element with id ' + v + ' is not defined!')
         }
 
-        const d3Node = select(this)
+        // Add styles to the rectangle if they were specified
+        if (el.options.rectStyle) {
+          const rect = (this as HTMLElement).querySelector('rect')!
+          for (const [key, value] of Object.entries(el.options.rectStyle)) {
+            (rect.style as any)[key] = value
+          }
+        }
+        // Add styles to the text element if they were specified
+        if (el.options.textStyle) {
+          const text = (this as HTMLElement).querySelector('text')!
+          for (const [key, value] of Object.entries(el.options.textStyle)) {
+            (text.style as any)[key] = value
+          }
+        }
 
         // now loop all listeners
+        const d3Node = select(this)
         for (const listener of el.listeners) {
           d3Node.on(listener.event, listener.callback)
         }

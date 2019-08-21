@@ -3,8 +3,8 @@
   "version": "0.2.1",
   "license": "MIT",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/Patcher56/vue-flowy.git"
+    "type": "git",
+    "url": "https://github.com/Patcher56/vue-flowy.git"
   },
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -20,7 +20,8 @@
   "dependencies": {
     "d3": "^5.9.7",
     "dagre-d3-renderer": "^0.5.8",
-    "graphlibrary": "^2.2.0"
+    "graphlibrary": "^2.2.0",
+    "word-wrap": "^1.2.3"
   },
   "devDependencies": {
     "@types/d3": "^5.7.2",
