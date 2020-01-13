@@ -6,7 +6,6 @@
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
-    "experimentalDecorators": true,
     "declaration": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
