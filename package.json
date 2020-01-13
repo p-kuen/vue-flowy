@@ -13,7 +13,7 @@
     "build": "yarn build:vue"
   },
   "main": "dist/VueFlowy.common.js",
-  "types": "types/main.d.ts",
+  "types": "dist/types/main.d.ts",
   "files": [
     "dist"
   ],
