@@ -11,11 +11,12 @@
     "build:vue": "vue-cli-service build --target lib --name VueFlowy src/main.ts",
     "build": "yarn build:vue"
   },
-  "main": "dist/VueFlowy.common.js",
+  "main": "dist/VueFlowy.umd.min.js",
   "types": "dist/types/main.d.ts",
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "dependencies": {
     "d3": "^5.15.0",
     "dagre-d3-renderer": "^0.5.8",
