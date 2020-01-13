@@ -3,11 +3,10 @@
   "version": "0.2.1",
   "license": "MIT",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/Patcher56/vue-flowy.git"
+    "type": "git",
+    "url": "https://github.com/Patcher56/vue-flowy.git"
   },
   "scripts": {
-    "serve": "vue-cli-service serve",
     "build:ts": "tsc -p tsconfig-lib.json",
     "build:vue": "vue-cli-service build --target lib --name VueFlowy src/main.ts",
     "build": "yarn build:vue"
@@ -18,18 +17,17 @@
     "dist"
   ],
   "dependencies": {
-    "d3": "^5.9.7",
+    "d3": "^5.15.0",
     "dagre-d3-renderer": "^0.5.8",
     "graphlibrary": "^2.2.0"
   },
   "devDependencies": {
     "@types/d3": "^5.7.2",
-    "@vue/cli-plugin-typescript": "^3.9.0",
-    "@vue/cli-service": "^3.9.3",
-    "typescript": "^3.5.3",
-    "vue": "^2.6.10",
-    "vue-property-decorator": "^8.2.1",
-    "vue-template-compiler": "^2.5.21"
+    "@vue/cli-plugin-typescript": "^4.1.2",
+    "@vue/cli-service": "^4.1.2",
+    "typescript": "^3.7.4",
+    "vue": "^2.6.11",
+    "vue-template-compiler": "^2.6.11"
   },
   "peerDependencies": {
     "vue": "^2.6.10"
