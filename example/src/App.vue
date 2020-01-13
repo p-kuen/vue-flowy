@@ -5,15 +5,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue'
 import {VueFlowy, FlowChart} from 'vue-flowy'
 
-export default {
+export default Vue.extend({
   name: "App",
   components: {
     VueFlowy
   },
-  data: function() {
+  data() {
     return {
       chart: new FlowChart({ direction: "LR" })
     };
@@ -31,7 +32,7 @@ export default {
       console.log("click!");
     });
   }
-};
+})
 </script>
 
 <style>
