@@ -7,9 +7,7 @@
     "url": "https://github.com/Patcher56/vue-flowy.git"
   },
   "scripts": {
-    "build:ts": "tsc -p tsconfig-lib.json",
-    "build:vue": "vue-cli-service build --target lib --name VueFlowy src/main.ts",
-    "build": "yarn build:vue"
+    "build": "rollup --config rollup.config.js"
   },
   "main": "dist/VueFlowy.umd.min.js",
   "types": "dist/types/main.d.ts",
@@ -18,19 +16,17 @@
   ],
   "sideEffects": false,
   "dependencies": {
-    "d3": "^5.15.0",
-    "dagre-d3-renderer": "^0.5.8",
-    "graphlibrary": "^2.2.0"
+    "d3-selection": "^1.4.1",
+    "vue": "^2.6.11"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^11.0.1",
     "@types/d3": "^5.7.2",
-    "@vue/cli-plugin-typescript": "^4.1.2",
-    "@vue/cli-service": "^4.1.2",
+    "rollup": "^1.29.1",
+    "rollup-plugin-typescript2": "^0.25.3",
+    "rollup-plugin-vue": "^5.1.6",
     "typescript": "^3.7.4",
-    "vue": "^2.6.11",
     "vue-template-compiler": "^2.6.11"
   },
-  "peerDependencies": {
-    "vue": "^2.6.10"
-  }
+  "peerDependencies": {}
 }

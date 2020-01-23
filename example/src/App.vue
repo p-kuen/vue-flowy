@@ -7,7 +7,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import {VueFlowy, FlowChart} from 'vue-flowy'
+import VueFlowy from '../../build/VueFlowy'
+import FlowChart from '../../build/FlowChart'
+// import {VueFlowy, FlowChart} from '../../build/main'
 
 export default Vue.extend({
   name: "App",

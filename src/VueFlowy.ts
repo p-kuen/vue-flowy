@@ -1,8 +1,7 @@
 import Vue, { PropType } from 'vue'
-import {FlowChart} from './FlowChart'
-export * from './FlowChart'
+import FlowChart from './FlowChart'
 
-export const VueFlowy = Vue.component('VueFlowy', {
+const VueFlowy = Vue.component('VueFlowy', {
   props: {
     chart: {
       type: Object as PropType<FlowChart>,
@@ -11,6 +10,7 @@ export const VueFlowy = Vue.component('VueFlowy', {
   },
   watch: {
     'chart.elements': function() {
+      console.log('render chart')
       this.renderChart()
     }
   },
@@ -29,3 +29,5 @@ export const VueFlowy = Vue.component('VueFlowy', {
     ])
   }
 })
+
+export default VueFlowy

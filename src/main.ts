@@ -1,7 +1,7 @@
-import {VueFlowy} from './VueFlowy'
 import {VueConstructor} from 'vue'
-export * from './VueFlowy'
-export * from './FlowChart'
+import VueFlowy from './VueFlowy'
+import FlowChart from './FlowChart'
+export {FlowChart, VueFlowy}
 
 export default {
   install(Vue: VueConstructor, options: any) {
