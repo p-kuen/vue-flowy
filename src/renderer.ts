@@ -1,6 +1,7 @@
 import { Selection } from "d3";
 import Graph from './Graph'
-import { createNodes } from "./render/nodes";
+import { createNodes, positionNodes } from "./render/nodes";
+import layout from "./layout";
 
 export class Renderer<T extends string> {
 
@@ -21,7 +22,9 @@ export class Renderer<T extends string> {
     // delete everything from element
     element.selectAll().remove()
 
-    createNodes(element.append('g').attr('class', 'nodes'), graph)
+    const nodes = createNodes(element.append('g').attr('class', 'nodes'), graph)
+    layout(graph)
+    positionNodes(nodes, graph)
   }
 
   // createOrSelectGroup(root, name) {

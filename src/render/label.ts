@@ -2,7 +2,7 @@ import { Node } from "@/Graph";
 import { Selection } from "d3-selection";
 import { SVGGElementSelection } from "@/types/d3-extra";
 
-export function addLabel(labelGroup: SVGGElementSelection, node: Node) {
+export function addLabel<T extends string>(labelGroup: SVGGElementSelection, node: Node<T>) {
   const labelText = node.label
   const svg = labelGroup.append('g')
 
@@ -22,11 +22,11 @@ export function addLabel(labelGroup: SVGGElementSelection, node: Node) {
   return svg
 }
 
-function addSvgLabel(svg: SVGGElementSelection, node: Node) {
+function addSvgLabel<T extends string>(svg: SVGGElementSelection, node: Node<T>) {
   // svg.node()?.appendChild(node.label!)
 }
 
-function addTextLabel(svg: SVGGElementSelection, node: Node) {
+function addTextLabel<T extends string>(svg: SVGGElementSelection, node: Node<T>) {
   const textSvg = svg.append('text')
 
   const lines = processEscapeSequences(node.label!).split('\n')

@@ -32,8 +32,15 @@ export function createNodes<T extends string>(selection: AnySelection, graph: Gr
     node.width = shapeBBox!.width
     node.height = shapeBBox!.height
   })
+
+  return nodeGroups
 }
 
-export function positionNodes() {
+export function positionNodes<T extends string>(selection: AnySelection, graph: Graph<T>) {
+  function translate(id: T) {
+    const node = graph.node(id)
+    return `translate(${node.x},${node.y})`
+  }
 
+  selection.attr('transform', translate)
 }

@@ -8,7 +8,7 @@
 import {Node} from '../Graph'
 import {BaseTypeSelection} from '../types/d3-extra'
 
-export function rect(parent: BaseTypeSelection, bbox: DOMRect, node: Node) {
+export function rect(parent: BaseTypeSelection, bbox: DOMRect, node: Node<string>) {
   var shapeSvg = parent.insert("rect", ":first-child")
     .attr("rx", node.rx || 0)
     .attr("ry", node.ry || 0)
@@ -24,7 +24,7 @@ export function rect(parent: BaseTypeSelection, bbox: DOMRect, node: Node) {
   return shapeSvg;
 }
 
-export function ellipse(parent: BaseTypeSelection, bbox: DOMRect, node: Node) {
+export function ellipse(parent: BaseTypeSelection, bbox: DOMRect, node: Node<string>) {
   var rx = bbox.width / 2;
   var ry = bbox.height / 2;
   var shapeSvg = parent.insert("ellipse", ":first-child")
@@ -40,7 +40,7 @@ export function ellipse(parent: BaseTypeSelection, bbox: DOMRect, node: Node) {
   return shapeSvg;
 }
 
-export function circle(parent: BaseTypeSelection, bbox: DOMRect, node: Node) {
+export function circle(parent: BaseTypeSelection, bbox: DOMRect, node: Node<string>) {
   var r = Math.max(bbox.width, bbox.height) / 2;
   var shapeSvg = parent.insert("circle", ":first-child")
     .attr("x", -bbox.width / 2)
@@ -57,7 +57,7 @@ export function circle(parent: BaseTypeSelection, bbox: DOMRect, node: Node) {
 // Circumscribe an ellipse for the bounding box with a diamond shape. I derived
 // the function to calculate the diamond shape from:
 // http://mathforum.org/kb/message.jspa?messageID=3750236
-export function diamond(parent: BaseTypeSelection, bbox: DOMRect, node: Node) {
+export function diamond(parent: BaseTypeSelection, bbox: DOMRect, node: Node<string>) {
   var w = (bbox.width * Math.SQRT2) / 2;
   var h = (bbox.height * Math.SQRT2) / 2;
   var points = [

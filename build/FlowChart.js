@@ -33,13 +33,20 @@ var FlowElement = /** @class */ (function () {
 //# sourceMappingURL=FlowElement.js.map
 
 var delimiter = '\x01';
+function edgeArgsToId(directed, fromId, toId, name) {
+    if (!directed && fromId > toId) {
+        fromId = toId;
+        toId = fromId;
+    }
+    return fromId + delimiter + toId + delimiter + (name || '');
+}
 var Graph = /** @class */ (function () {
     function Graph(options) {
-        var _a, _b;
-        this.compound = false;
+        var _a, _b, _c, _d;
         this.nodes = {};
         this.edges = {};
-        this.compound = (_b = (_a = options) === null || _a === void 0 ? void 0 : _a.compound, (_b !== null && _b !== void 0 ? _b : false));
+        this.directed = (_b = (_a = options) === null || _a === void 0 ? void 0 : _a.directed, (_b !== null && _b !== void 0 ? _b : false));
+        this.compound = (_d = (_c = options) === null || _c === void 0 ? void 0 : _c.compound, (_d !== null && _d !== void 0 ? _d : false));
     }
     Graph.prototype.setGraph = function (graph) {
         this.graph = graph;
@@ -47,6 +54,8 @@ var Graph = /** @class */ (function () {
     };
     Graph.prototype.setNode = function (id, options) {
         var defaultOptions = {
+            x: 0,
+            y: 0,
             width: 10,
             height: 10,
             padding: {
@@ -55,15 +64,22 @@ var Graph = /** @class */ (function () {
                 top: 10,
                 bottom: 10
             },
-            parent: null,
             children: {},
-            labelType: 'text'
+            inEdges: {},
+            outEdges: {},
+            predecessors: {},
+            successors: {},
+            labelType: 'text',
+            order: 0
         };
         this.nodes[id] = Object.assign(defaultOptions, options);
         return this;
     };
     Graph.prototype.node = function (id) {
         return this.nodes[id];
+    };
+    Graph.prototype.hasNode = function (id) {
+        return this.nodes[id] !== undefined;
     };
     Object.defineProperty(Graph.prototype, "nodeIds", {
         get: function () {
@@ -72,16 +88,94 @@ var Graph = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
+    Object.defineProperty(Graph.prototype, "nodeObjects", {
+        get: function () {
+            return Object.values(this.nodes);
+        },
+        enumerable: true,
+        configurable: true
+    });
     Graph.prototype.setEdge = function (fromId, toId, options) {
         var id = this.createEdgeId(fromId, toId);
-        this.edges[id] = options;
+        var fromNode = this.node(fromId);
+        var toNode = this.node(toId);
+        var defaultOptions = {
+            fromId: fromId,
+            toId: toId,
+            minlen: 0,
+            weight: 1
+        };
+        var edgeObject = Object.assign(defaultOptions, options);
+        fromNode.outEdges[id] = edgeObject;
+        toNode.inEdges[id] = edgeObject;
+        this.edges[id] = edgeObject;
     };
-    Graph.prototype.edge = function (id) {
-        return this.edges[id];
+    Graph.prototype.edge = function (childId, parentId, name) {
+        var edgeId = edgeArgsToId(this.directed, childId, parentId, name);
+        return this.edges[edgeId];
     };
     Object.defineProperty(Graph.prototype, "edgeIds", {
         get: function () {
             return Object.keys(this.edges);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Graph.prototype, "edgeObjects", {
+        get: function () {
+            return Object.values(this.edges);
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Graph.prototype.inEdgeObjects = function (id, fromId) {
+        var inEdges = this.nodes[id].inEdges;
+        if (!inEdges) {
+            return [];
+        }
+        var inEdgeObjects = Object.values(inEdges);
+        if (!fromId) {
+            return inEdgeObjects;
+        }
+        return inEdgeObjects.filter(function (edge) { return edge.fromId === fromId; });
+    };
+    Graph.prototype.outEdgeObjects = function (id, toId) {
+        var outEdges = this.nodes[id].outEdges;
+        if (!outEdges) {
+            return [];
+        }
+        var outEdgeObjects = Object.values(outEdges);
+        if (!toId) {
+            return outEdgeObjects;
+        }
+        return outEdgeObjects.filter(function (edge) { return edge.toId === toId; });
+    };
+    Graph.prototype.nodeEdgeObjects = function (fromId, toId) {
+        var inEdges = this.inEdgeObjects(fromId, toId);
+        var outEdges = this.outEdgeObjects(fromId, toId);
+        return inEdges.concat(outEdges);
+    };
+    Graph.prototype.hasEdge = function (fromId, toId, name) {
+        var edgeId = edgeArgsToId(this.directed, fromId, toId, name);
+        return this.edges[edgeId] !== undefined;
+    };
+    Graph.prototype.predecessors = function (id) {
+        var nodes = this.node(id).predecessors;
+        return Object.keys(nodes);
+    };
+    Graph.prototype.successors = function (id) {
+        var nodes = this.node(id).successors;
+        return Object.keys(nodes);
+    };
+    Graph.prototype.neighbors = function (id) {
+        var predecessors = this.predecessors(id);
+        var successors = this.successors(id);
+        return predecessors.concat(successors);
+    };
+    Object.defineProperty(Graph.prototype, "rootNodeIds", {
+        get: function () {
+            var _this = this;
+            return this.nodeIds.filter(function (id) { return Object.keys(_this.node(id).inEdges).length === 0; });
         },
         enumerable: true,
         configurable: true
@@ -145,6 +239,7 @@ function processEscapeSequences(text) {
     }
     return newText;
 }
+//# sourceMappingURL=label.js.map
 
 // source: https://github.com/dagrejs/dagre-d3/blob/master/lib/shapes.js
 function rect(parent, bbox, node) {
@@ -235,7 +330,91 @@ function createNodes(selection, graph) {
         node.width = shapeBBox.width;
         node.height = shapeBBox.height;
     });
+    return nodeGroups;
 }
+function positionNodes(selection, graph) {
+    function translate(id) {
+        var node = graph.node(id);
+        return "translate(" + node.x + "," + node.y + ")";
+    }
+    selection.attr('transform', translate);
+}
+//# sourceMappingURL=nodes.js.map
+
+function maxRank(graph) {
+    return Math.max.apply(Math, graph.nodeObjects.map(function (n) { return n.rank || 0; }));
+}
+function buildLayerMatrix(graph) {
+    var layering = new Array(maxRank(graph) + 1).map(function () { return []; });
+    for (var _i = 0, _a = graph.nodeIds; _i < _a.length; _i++) {
+        var id = _a[_i];
+        var node = graph.node(id);
+        var rank = node.rank;
+        if (rank !== undefined) {
+            layering[rank][node.order] = id;
+        }
+    }
+    return layering;
+}
+//# sourceMappingURL=layer.js.map
+
+function positionY(graph) {
+    var layers = buildLayerMatrix(graph);
+    var rankSep = /*graph.graph?.ranksep*/ 0;
+    var prevY = 0;
+    for (var _i = 0, layers_1 = layers; _i < layers_1.length; _i++) {
+        var layer = layers_1[_i];
+        var maxHeight = Math.max.apply(Math, layer.map(function (id) { return graph.node(id).height; }));
+        for (var _a = 0, layer_1 = layer; _a < layer_1.length; _a++) {
+            var id = layer_1[_a];
+            graph.node(id).y = prevY + maxHeight / 2;
+        }
+        prevY += maxHeight + rankSep;
+    }
+}
+function position(graph) {
+    positionY(graph);
+    // for (const iterator of positionX(graph)) {
+    // }
+}
+//# sourceMappingURL=position.js.map
+
+function layout(graph) {
+    // const layoutGraph = buildLayoutGraph(graph)
+    _layout(graph);
+    // updateInputGraph(graph, layoutGraph)
+}
+function _layout(graph) {
+    position(graph);
+    // translateGraph(graph)
+}
+/*
+ * This idea comes from the Gansner paper: to account for edge labels in our
+ * layout we split each rank in half by doubling minlen and halving ranksep.
+ * Then we can place labels at these mid-points between nodes.
+ *
+ * We also add some minimal padding to the width to push the label for the edge
+ * away from the edge itself a bit.
+ */
+// function makeSpaceForEdgeLabels<T extends string>(g: Graph<T>) {
+//   const graph = g.graph
+//   graph.ranksep /= 2
+//   for (const e of g.edgeIds) {
+//     const edge = g.edge(e)
+//   }
+//   _.forEach(g.edges(), function (e) {
+//     const edge = g.edge(e)
+//     edge.minlen *= 2
+//     if (edge.labelpos.toLowerCase() !== 'c') {
+//       if (graph.rankdir === 'TB' || graph.rankdir === 'BT') {
+//         edge.width += edge.labeloffset
+//       } else {
+//         edge.height += edge.labeloffset
+//       }
+//     }
+//   })
+// }
+//# sourceMappingURL=layout.js.map
 
 var Renderer = /** @class */ (function () {
     function Renderer(graph) {
@@ -251,11 +430,12 @@ var Renderer = /** @class */ (function () {
     Renderer.prototype.render = function (element, graph) {
         // delete everything from element
         element.selectAll().remove();
-        createNodes(element.append('g').attr('class', 'nodes'), graph);
+        var nodes = createNodes(element.append('g').attr('class', 'nodes'), graph);
+        layout(graph);
+        positionNodes(nodes, graph);
     };
     return Renderer;
 }());
-//# sourceMappingURL=Renderer.js.map
 
 // import * as d3Renderer from 'dagre-d3-renderer'
 var FlowChart = /** @class */ (function () {

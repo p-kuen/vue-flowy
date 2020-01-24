@@ -1,12 +1,15 @@
 import Graph from "./Graph"
+import { position } from "./layout/position"
 
 export default function layout<T extends string>(graph: Graph<T>) {
   // const layoutGraph = buildLayoutGraph(graph)
-  runLayout(graph)
-  updateInputGraph(graph, layoutGraph)
+  _layout(graph)
+  // updateInputGraph(graph, layoutGraph)
 }
 
-function _layout() {
+function _layout<T extends string>(graph: Graph<T>) {
+  position(graph)
+  // translateGraph(graph)
 
 }
 
@@ -18,23 +21,23 @@ function _layout() {
  * We also add some minimal padding to the width to push the label for the edge
  * away from the edge itself a bit.
  */
-function makeSpaceForEdgeLabels<T extends string>(g: Graph<T>) {
-  const graph = g.graph
-  graph.ranksep /= 2
+// function makeSpaceForEdgeLabels<T extends string>(g: Graph<T>) {
+//   const graph = g.graph
+//   graph.ranksep /= 2
 
-  for (const e of g.edgeIds) {
-    const edge = g.edge(e)
-  }
+//   for (const e of g.edgeIds) {
+//     const edge = g.edge(e)
+//   }
 
-  _.forEach(g.edges(), function (e) {
-    const edge = g.edge(e)
-    edge.minlen *= 2
-    if (edge.labelpos.toLowerCase() !== 'c') {
-      if (graph.rankdir === 'TB' || graph.rankdir === 'BT') {
-        edge.width += edge.labeloffset
-      } else {
-        edge.height += edge.labeloffset
-      }
-    }
-  })
-}
+//   _.forEach(g.edges(), function (e) {
+//     const edge = g.edge(e)
+//     edge.minlen *= 2
+//     if (edge.labelpos.toLowerCase() !== 'c') {
+//       if (graph.rankdir === 'TB' || graph.rankdir === 'BT') {
+//         edge.width += edge.labeloffset
+//       } else {
+//         edge.height += edge.labeloffset
+//       }
+//     }
+//   })
+// }
