@@ -6,7 +6,8 @@ import vue from 'rollup-plugin-vue'
 const options = {
   input: ['src/main.ts', 'src/VueFlowy.ts', 'src/FlowChart.ts'],
   output: {
-    dir: 'build'
+    dir: 'build',
+    sourcemap: true
   },
   plugins: [commonjs(), typescript(), vue()]
 }

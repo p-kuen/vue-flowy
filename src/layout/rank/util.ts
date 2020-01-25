@@ -28,12 +28,14 @@ export function longestPath<T extends string>(graph: Graph<T>) {
     const node = graph.node(id)
 
     if (visited[id]) {
-      return node.rank;
+      return node.rank!;
     }
 
     visited[id] = true;
 
     let rank = Math.min(...graph.outEdgeObjects(id).map(edge => dfs(edge.toId) - edge.minlen))
+
+    console.log('new rank for node', id, rank)
 
     if (rank === Number.POSITIVE_INFINITY || // return value of _.map([]) for Lodash 3
         rank === undefined || // return value of _.map([]) for Lodash 4
@@ -43,6 +45,8 @@ export function longestPath<T extends string>(graph: Graph<T>) {
 
     return (node.rank = rank);
   }
+
+  console.log('root nodes', graph.rootNodeIds)
 
   for (const id of graph.rootNodeIds) {
     dfs(id)

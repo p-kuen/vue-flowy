@@ -2,7 +2,7 @@
 // import Graph from './Graph'
 import {FlowElement, FlowElementEdgeOptions} from './FlowElement'
 import {select} from 'd3-selection'
-import Graph from './Graph'
+import Graph, { NodeOptions } from './Graph'
 import { Renderer } from './Renderer'
 
 export interface FlowChartElementOptions {
@@ -63,28 +63,28 @@ export default class FlowChart {
     // first create all nodes
     for (const i in this.elements) {
       const el = this.elements[i]
-      const elData: FlowChartElementOptions = {
-        label: el.id
+      const elData: NodeOptions = {
+        label: el.id,
+        rx: 5,
+        ry: 5
       }
 
       if (el.options?.label) {
         elData.label = el.options.label
       }
       g.setNode(el.id, elData)
-      const node = g.node(el.id)
+    }
 
-      // apply some styles
-      node.rx = node.ry = 5
-
+    for (const el of this.elements) {
       // now create all edges
       for (const k in el.edges) {
         const edge = el.edges[k]
         const edgeData: FlowElementEdgeOptions = {}
-
+  
         if (edge.options && edge.options.label) {
           edgeData.label = edge.options.label
         }
-
+  
         g.setEdge(el.id, edge.otherId, edgeData)
       }
     }

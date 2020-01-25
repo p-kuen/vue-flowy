@@ -33,10 +33,10 @@ export default function dfs<T extends string>(graph: Graph<T>, ids: T[] | T, ord
     ids = []
   }
 
-  var navigation = (graph.directed ? graph.successors : graph.neighbors).bind(graph);
+  const navigation = (graph.directed ? graph.successors : graph.neighbors).bind(graph);
 
-  var acc = [];
-  var visited = {} as Record<T, true>
+  const acc: T[] = [];
+  const visited = {} as Record<T, true>
 
   for (const id of ids) {
     if (!graph.hasNode(id)) {

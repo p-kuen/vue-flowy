@@ -342,10 +342,13 @@ function positionNodes(selection, graph) {
 //# sourceMappingURL=nodes.js.map
 
 function maxRank(graph) {
-    return Math.max.apply(Math, graph.nodeObjects.map(function (n) { return n.rank || 0; }));
+    return Math.max.apply(Math, graph.nodeObjects.map(function (n) { var _a; return _a = n.rank, (_a !== null && _a !== void 0 ? _a : 0); }));
 }
 function buildLayerMatrix(graph) {
-    var layering = new Array(maxRank(graph) + 1).map(function () { return []; });
+    var layering = [];
+    for (var i = 0; i < maxRank(graph) + 1; i++) {
+        layering.push([]);
+    }
     for (var _i = 0, _a = graph.nodeIds; _i < _a.length; _i++) {
         var id = _a[_i];
         var node = graph.node(id);
@@ -362,6 +365,7 @@ function positionY(graph) {
     var layers = buildLayerMatrix(graph);
     var rankSep = /*graph.graph?.ranksep*/ 0;
     var prevY = 0;
+    console.log('vertical layer matrix', layers);
     for (var _i = 0, layers_1 = layers; _i < layers_1.length; _i++) {
         var layer = layers_1[_i];
         var maxHeight = Math.max.apply(Math, layer.map(function (id) { return graph.node(id).height; }));
@@ -377,7 +381,237 @@ function position(graph) {
     // for (const iterator of positionX(graph)) {
     // }
 }
-//# sourceMappingURL=position.js.map
+
+/*
+ * Initializes ranks for the input graph using the longest path algorithm. This
+ * algorithm scales well and is fast in practice, it yields rather poor
+ * solutions. Nodes are pushed to the lowest layer possible, leaving the bottom
+ * ranks wide and leaving edges longer than necessary. However, due to its
+ * speed, this algorithm is good for getting an initial ranking that can be fed
+ * into other algorithms.
+ *
+ * This algorithm does not normalize layers because it will be used by other
+ * algorithms in most cases. If using this algorithm directly, be sure to
+ * run normalize at the end.
+ *
+ * Pre-conditions:
+ *
+ *    1. Input graph is a DAG.
+ *    2. Input graph node labels can be assigned properties.
+ *
+ * Post-conditions:
+ *
+ *    1. Each node will be assigned an (unnormalized) "rank" property.
+ */
+function longestPath(graph) {
+    var visited = {};
+    function dfs(id) {
+        var node = graph.node(id);
+        if (visited[id]) {
+            return node.rank;
+        }
+        visited[id] = true;
+        var rank = Math.min.apply(Math, graph.outEdgeObjects(id).map(function (edge) { return dfs(edge.toId) - edge.minlen; }));
+        console.log('new rank for node', id, rank);
+        if (rank === Number.POSITIVE_INFINITY || // return value of _.map([]) for Lodash 3
+            rank === undefined || // return value of _.map([]) for Lodash 4
+            rank === null) { // return value of _.map([null])
+            rank = 0;
+        }
+        return (node.rank = rank);
+    }
+    console.log('root nodes', graph.rootNodeIds);
+    for (var _i = 0, _a = graph.rootNodeIds; _i < _a.length; _i++) {
+        var id = _a[_i];
+        dfs(id);
+    }
+}
+//# sourceMappingURL=util.js.map
+
+function feasibleTree(graph) {
+    var t = new Graph({ directed: false });
+    var start = graph.nodeIds[0];
+    var size = graph.nodeIds.length;
+    t.setNode(start, {});
+    // TODO!
+    return t;
+}
+//# sourceMappingURL=feasible-tree.js.map
+
+function doDfs(graph, id, postorder, visited, navigation, acc) {
+    if (visited[id]) {
+        return;
+    }
+    visited[id] = true;
+    if (!postorder) {
+        acc.push(id);
+    }
+    for (var _i = 0, _a = navigation(id); _i < _a.length; _i++) {
+        var i = _a[_i];
+        doDfs(graph, i, postorder, visited, navigation, acc);
+    }
+    if (postorder) {
+        acc.push(id);
+    }
+}
+/*
+ * A helper that preforms a pre- or post-order traversal on the input graph
+ * and returns the nodes in the order they were visited. If the graph is
+ * undirected then this algorithm will navigate using neighbors. If the graph
+ * is directed then this algorithm will navigate using successors.
+ *
+ * Order must be one of "pre" or "post".
+ */
+function dfs(graph, ids, order) {
+    if (!Array.isArray(ids)) {
+        ids = [];
+    }
+    var navigation = (graph.directed ? graph.successors : graph.neighbors).bind(graph);
+    var acc = [];
+    var visited = {};
+    for (var _i = 0, ids_1 = ids; _i < ids_1.length; _i++) {
+        var id = ids_1[_i];
+        if (!graph.hasNode(id)) {
+            throw new Error("Graph does not have node with id " + id);
+        }
+        doDfs(graph, id, order === 'post', visited, navigation, acc);
+    }
+    return acc;
+}
+//# sourceMappingURL=dfs.js.map
+
+function postorder(graph, ids) {
+    return dfs(graph, ids, 'post');
+}
+//# sourceMappingURL=postorder.js.map
+
+/*
+ * Returns true if the edge is in the tree.
+ */
+function isTreeEdge(tree, preId, id) {
+    return tree.hasEdge(preId, id);
+}
+function dfsAssignLowLim(tree, visited, nextLim, id, parent) {
+    var low = nextLim;
+    var node = tree.node(id);
+    visited[id] = true;
+    for (var _i = 0, _a = tree.neighbors(id); _i < _a.length; _i++) {
+        var i = _a[_i];
+        if (!visited[i]) {
+            nextLim = dfsAssignLowLim(tree, visited, nextLim, i, id);
+        }
+    }
+    node.low = low;
+    node.lim = nextLim++;
+    if (parent) {
+        node.parent = parent;
+    }
+    else {
+        // TODO should be able to remove this when we incrementally update low lim
+        delete node.parent;
+    }
+    return nextLim;
+}
+function initLowLimValues(tree, root) {
+    if (root === undefined) {
+        root = tree.nodeIds[0];
+    }
+    dfsAssignLowLim(tree, {}, 1, root);
+}
+/*
+ * Given the tight tree, its graph, and a child in the graph calculate and
+ * return the cut value for the edge between the child and its parent.
+ */
+function calcCutValue(tree, graph, child) {
+    var childLab = tree.node(child);
+    var parent = childLab.parent;
+    // True if the child is on the tail end of the edge in the directed graph
+    var childIsTail = true;
+    // The graph's view of the tree edge we're inspecting
+    var graphEdge = graph.edge(child, parent);
+    // The accumulated cut value for the edge between this node and its parent
+    var cutValue = 0;
+    if (!graphEdge) {
+        childIsTail = false;
+        graphEdge = graph.edge(parent, child);
+    }
+    cutValue = graphEdge.weight;
+    for (var _i = 0, _a = graph.nodeEdgeObjects(child); _i < _a.length; _i++) {
+        var edge = _a[_i];
+        var isOutEdge = edge.fromId === child;
+        var other = isOutEdge ? edge.toId : edge.fromId;
+        if (other !== parent) {
+            var pointsToHead = isOutEdge === childIsTail;
+            var otherWeight = edge.weight;
+            cutValue += pointsToHead ? otherWeight : -otherWeight;
+            if (isTreeEdge(tree, child, other)) {
+                var otherCutValue = tree.edge(child, other).cutvalue;
+                cutValue += pointsToHead ? -otherCutValue : otherCutValue;
+            }
+        }
+    }
+    return cutValue;
+}
+function assignCutValue(tree, graph, child) {
+    var childLab = tree.node(child);
+    var parent = childLab.parent;
+    tree.edge(child, parent).cutvalue = calcCutValue(tree, graph, child);
+}
+/*
+ * Initializes cut values for all edges in the tree.
+ */
+function initCutValues(tree, graph) {
+    var ids = postorder(tree, tree.nodeIds);
+    ids = ids.slice(0, ids.length - 1);
+    for (var _i = 0, ids_1 = ids; _i < ids_1.length; _i++) {
+        var id = ids_1[_i];
+        assignCutValue(tree, graph, id);
+    }
+}
+function networkSimplex(graph) {
+    // g = simplify(g);
+    longestPath(graph);
+    var tree = feasibleTree(graph);
+    initLowLimValues(tree);
+    initCutValues(tree, graph);
+    // while ((e = leaveEdge(tree))) {
+    //   f = enterEdge(t, g, e);
+    //   exchangeEdges(t, g, e, f);
+    // }
+}
+//# sourceMappingURL=network-simplex.js.map
+
+/*
+ * Assigns a rank to each node in the input graph that respects the "minlen"
+ * constraint specified on edges between nodes.
+ *
+ * This basic structure is derived from Gansner, et al., "A Technique for
+ * Drawing Directed Graphs."
+ *
+ * Pre-conditions:
+ *
+ *    1. Graph must be a connected DAG
+ *    2. Graph nodes must be objects
+ *    3. Graph edges must have "weight" and "minlen" attributes
+ *
+ * Post-conditions:
+ *
+ *    1. Graph nodes will have a "rank" attribute based on the results of the
+ *       algorithm. Ranks can start at any index (including negative), we'll
+ *       fix them up later.
+ */
+function rank(graph) {
+    var _a;
+    switch ((_a = graph.graph) === null || _a === void 0 ? void 0 : _a.ranker) {
+        case "network-simplex":
+            networkSimplex(graph);
+            break;
+        // case "tight-tree": tightTreeRanker(g); break;
+        // case "longest-path": longestPathRanker(g); break;
+        default: networkSimplex(graph);
+    }
+}
+//# sourceMappingURL=rank.js.map
 
 function layout(graph) {
     // const layoutGraph = buildLayoutGraph(graph)
@@ -385,6 +619,7 @@ function layout(graph) {
     // updateInputGraph(graph, layoutGraph)
 }
 function _layout(graph) {
+    rank(graph);
     position(graph);
     // translateGraph(graph)
 }
@@ -414,7 +649,6 @@ function _layout(graph) {
 //     }
 //   })
 // }
-//# sourceMappingURL=layout.js.map
 
 var Renderer = /** @class */ (function () {
     function Renderer(graph) {
@@ -436,6 +670,7 @@ var Renderer = /** @class */ (function () {
     };
     return Renderer;
 }());
+//# sourceMappingURL=Renderer.js.map
 
 // import * as d3Renderer from 'dagre-d3-renderer'
 var FlowChart = /** @class */ (function () {
@@ -481,15 +716,17 @@ var FlowChart = /** @class */ (function () {
         for (var i in this.elements) {
             var el = this.elements[i];
             var elData = {
-                label: el.id
+                label: el.id,
+                rx: 5,
+                ry: 5
             };
             if ((_a = el.options) === null || _a === void 0 ? void 0 : _a.label) {
                 elData.label = el.options.label;
             }
             g.setNode(el.id, elData);
-            var node = g.node(el.id);
-            // apply some styles
-            node.rx = node.ry = 5;
+        }
+        for (var _i = 0, _b = this.elements; _i < _b.length; _i++) {
+            var el = _b[_i];
             // now create all edges
             for (var k in el.edges) {
                 var edge = el.edges[k];
@@ -533,3 +770,4 @@ var FlowChart = /** @class */ (function () {
 //# sourceMappingURL=FlowChart.js.map
 
 export default FlowChart;
+//# sourceMappingURL=FlowChart.js.map

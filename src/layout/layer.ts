@@ -1,11 +1,15 @@
 import Graph from "@/Graph";
 
 function maxRank<T extends string>(graph: Graph<T>) {
- return Math.max(...graph.nodeObjects.map(n => n.rank || 0))
+ return Math.max(...graph.nodeObjects.map(n => n.rank ?? 0))
 }
 
 export function buildLayerMatrix<T extends string>(graph: Graph<T>) {
-  const layering = new Array(maxRank(graph) + 1).map(() => [] as Array<T>)
+  const layering: T[][] = []
+  
+  for (let i = 0; i < maxRank(graph) + 1; i++) {
+    layering.push([])
+  }
 
   for (const id of graph.nodeIds) {
     const node = graph.node(id)

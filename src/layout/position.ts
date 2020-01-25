@@ -25,6 +25,8 @@ function positionY<T extends string>(graph: Graph<T>) {
   var rankSep = /*graph.graph?.ranksep*/ 0;
   var prevY = 0;
 
+  console.log('vertical layer matrix', layers)
+
   for (const layer of layers) {
     const maxHeight = Math.max(...layer.map(id => graph.node(id).height))
     for (const id of layer) {
