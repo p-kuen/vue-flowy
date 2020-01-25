@@ -30,7 +30,6 @@ var FlowElement = /** @class */ (function () {
     };
     return FlowElement;
 }());
-//# sourceMappingURL=FlowElement.js.map
 
 var delimiter = '\x01';
 function edgeArgsToId(directed, fromId, toId, name) {
@@ -670,6 +669,7 @@ function position(graph) {
     // for (const iterator of positionX(graph)) {
     // }
 }
+//# sourceMappingURL=position.js.map
 
 function layout(graph) {
     // const layoutGraph = buildLayoutGraph(graph)
@@ -708,6 +708,7 @@ function _layout(graph) {
 //     }
 //   })
 // }
+//# sourceMappingURL=layout.js.map
 
 var Renderer = /** @class */ (function () {
     function Renderer(graph) {
@@ -826,7 +827,6 @@ var FlowChart = /** @class */ (function () {
     };
     return FlowChart;
 }());
-//# sourceMappingURL=FlowChart.js.map
 
 export default FlowChart;
 //# sourceMappingURL=FlowChart.js.map

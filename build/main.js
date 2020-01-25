@@ -10,7 +10,6 @@ var main = {
         Vue.component('VueFlowy', VueFlowy);
     }
 };
-//# sourceMappingURL=main.js.map
 
 export default main;
 //# sourceMappingURL=main.js.map

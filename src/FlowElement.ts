@@ -1,4 +1,4 @@
-import { FlowChartElementOptions } from './FlowChart';
+import { NodeOptions } from "./Graph"
 
 export interface FlowElementEdgeOptions {
   label?: string
@@ -18,11 +18,11 @@ export const flowElementsById: Record<string, FlowElement> = {}
 
 export class FlowElement {
   id: string
-  options: FlowChartElementOptions
+  options: NodeOptions
   edges: FlowElementEdge[] = []
   listeners: FlowElementListener[] = []
 
-  constructor(id: string, options?: FlowChartElementOptions) {
+  constructor(id: string, options?: NodeOptions) {
     this.id = id
     this.options = Object.assign({}, options)
     this.register()

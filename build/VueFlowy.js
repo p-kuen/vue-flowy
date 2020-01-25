@@ -27,7 +27,6 @@ var VueFlowy = Vue.component('VueFlowy', {
         ]);
     }
 });
-//# sourceMappingURL=VueFlowy.js.map
 
 export default VueFlowy;
 //# sourceMappingURL=VueFlowy.js.map

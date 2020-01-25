@@ -5,10 +5,6 @@ import {select} from 'd3-selection'
 import Graph, { NodeOptions } from './Graph'
 import { Renderer } from './Renderer'
 
-export interface FlowChartElementOptions {
-  label?: string
-}
-
 export interface FlowChartOptions {
   direction: 'LR' | 'TB' | 'BT' | 'RL'
 }
@@ -24,7 +20,7 @@ export default class FlowChart {
     this.options = Object.assign(this.options, options)
   }
 
-  addElement(id: string, options?: FlowChartElementOptions) {
+  addElement(id: string, options?: NodeOptions) {
     console.log('add element')
     const el = new FlowElement(id, options)
     this.elements.push(el)

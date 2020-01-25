@@ -1,4 +1,4 @@
-import { FlowChartElementOptions } from './FlowChart';
+import { NodeOptions } from "./Graph";
 export interface FlowElementEdgeOptions {
     label?: string;
 }
@@ -13,10 +13,10 @@ export interface FlowElementListener {
 export declare const flowElementsById: Record<string, FlowElement>;
 export declare class FlowElement {
     id: string;
-    options: FlowChartElementOptions;
+    options: NodeOptions;
     edges: FlowElementEdge[];
     listeners: FlowElementListener[];
-    constructor(id: string, options?: FlowChartElementOptions);
+    constructor(id: string, options?: NodeOptions);
     static getById(id: string): FlowElement;
     leadsTo(destinationElement: FlowElement, options?: FlowElementEdgeOptions): FlowElement;
     unregister(): void;
