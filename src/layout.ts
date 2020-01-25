@@ -1,6 +1,7 @@
 import Graph from "./Graph"
-import { position } from "./layout/position"
-import { rank } from "./layout/rank"
+import rank from "./layout/rank"
+import order from "./layout/order"
+import position from "./layout/position"
 
 export default function layout<T extends string>(graph: Graph<T>) {
   // const layoutGraph = buildLayoutGraph(graph)
@@ -10,6 +11,7 @@ export default function layout<T extends string>(graph: Graph<T>) {
 
 function _layout<T extends string>(graph: Graph<T>) {
   rank(graph)
+  order(graph)
   position(graph)
   // translateGraph(graph)
 

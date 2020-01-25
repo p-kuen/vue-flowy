@@ -1,7 +1,7 @@
 import Graph from "@/Graph";
 
-function maxRank<T extends string>(graph: Graph<T>) {
- return Math.max(...graph.nodeObjects.map(n => n.rank ?? 0))
+export function maxRank<T extends string>(graph: Graph<T>) {
+  return Math.max(...graph.nodeObjects.map(n => n.rank ?? 0))
 }
 
 export function buildLayerMatrix<T extends string>(graph: Graph<T>) {

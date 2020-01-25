@@ -21,6 +21,7 @@ export interface NodeOptions {
 }
 
 export interface InternalNodeOptions<T extends string> {
+  id: T
   width: number
   height: number
   x: number
@@ -93,6 +94,7 @@ export default class Graph<T extends string> {
 
   setNode(id: T, options: NodeOptions) {
     const defaultOptions: InternalNodeOptions<T> = {
+      id,
       x: 0,
       y: 0,
       width: 10,

@@ -17,6 +17,7 @@ export interface NodeOptions {
     ry?: number;
 }
 export interface InternalNodeOptions<T extends string> {
+    id: T;
     width: number;
     height: number;
     x: number;

@@ -1,2 +1,2 @@
 import Graph from "@/Graph";
-export declare function position<T extends string>(graph: Graph<T>): void;
+export default function position<T extends string>(graph: Graph<T>): void;

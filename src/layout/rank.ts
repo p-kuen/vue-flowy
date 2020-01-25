@@ -20,7 +20,7 @@ import networkSimplex from "./rank/network-simplex";
  *       algorithm. Ranks can start at any index (including negative), we'll
  *       fix them up later.
  */
-export function rank<T extends string>(graph: Graph<T>) {
+export default function rank<T extends string>(graph: Graph<T>) {
   switch(graph.graph?.ranker) {
     case "network-simplex": networkSimplex(graph); break;
     // case "tight-tree": tightTreeRanker(g); break;

@@ -1,5 +1,5 @@
 import Graph from "@/Graph";
-import { buildLayerMatrix } from "./layer";
+import { buildLayerMatrix } from "./util";
 
 // function balance(xss, align) {
 
@@ -36,7 +36,7 @@ function positionY<T extends string>(graph: Graph<T>) {
   }
 }
 
-export function position<T extends string>(graph: Graph<T>) {
+export default function position<T extends string>(graph: Graph<T>) {
 
   positionY(graph)
   // for (const iterator of positionX(graph)) {

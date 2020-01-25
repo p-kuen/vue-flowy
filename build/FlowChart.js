@@ -54,6 +54,7 @@ var Graph = /** @class */ (function () {
     };
     Graph.prototype.setNode = function (id, options) {
         var defaultOptions = {
+            id: id,
             x: 0,
             y: 0,
             width: 10,
@@ -341,47 +342,6 @@ function positionNodes(selection, graph) {
 }
 //# sourceMappingURL=nodes.js.map
 
-function maxRank(graph) {
-    return Math.max.apply(Math, graph.nodeObjects.map(function (n) { var _a; return _a = n.rank, (_a !== null && _a !== void 0 ? _a : 0); }));
-}
-function buildLayerMatrix(graph) {
-    var layering = [];
-    for (var i = 0; i < maxRank(graph) + 1; i++) {
-        layering.push([]);
-    }
-    for (var _i = 0, _a = graph.nodeIds; _i < _a.length; _i++) {
-        var id = _a[_i];
-        var node = graph.node(id);
-        var rank = node.rank;
-        if (rank !== undefined) {
-            layering[rank][node.order] = id;
-        }
-    }
-    return layering;
-}
-//# sourceMappingURL=layer.js.map
-
-function positionY(graph) {
-    var layers = buildLayerMatrix(graph);
-    var rankSep = /*graph.graph?.ranksep*/ 0;
-    var prevY = 0;
-    console.log('vertical layer matrix', layers);
-    for (var _i = 0, layers_1 = layers; _i < layers_1.length; _i++) {
-        var layer = layers_1[_i];
-        var maxHeight = Math.max.apply(Math, layer.map(function (id) { return graph.node(id).height; }));
-        for (var _a = 0, layer_1 = layer; _a < layer_1.length; _a++) {
-            var id = layer_1[_a];
-            graph.node(id).y = prevY + maxHeight / 2;
-        }
-        prevY += maxHeight + rankSep;
-    }
-}
-function position(graph) {
-    positionY(graph);
-    // for (const iterator of positionX(graph)) {
-    // }
-}
-
 /*
  * Initializes ranks for the input graph using the longest path algorithm. This
  * algorithm scales well and is fast in practice, it yields rather poor
@@ -613,6 +573,104 @@ function rank(graph) {
 }
 //# sourceMappingURL=rank.js.map
 
+function maxRank(graph) {
+    return Math.max.apply(Math, graph.nodeObjects.map(function (n) { var _a; return _a = n.rank, (_a !== null && _a !== void 0 ? _a : 0); }));
+}
+function buildLayerMatrix(graph) {
+    var layering = [];
+    for (var i = 0; i < maxRank(graph) + 1; i++) {
+        layering.push([]);
+    }
+    for (var _i = 0, _a = graph.nodeIds; _i < _a.length; _i++) {
+        var id = _a[_i];
+        var node = graph.node(id);
+        var rank = node.rank;
+        if (rank !== undefined) {
+            layering[rank][node.order] = id;
+        }
+    }
+    return layering;
+}
+//# sourceMappingURL=util.js.map
+
+/*
+ * Assigns an initial order value for each node by performing a DFS search
+ * starting from nodes in the first rank. Nodes are assigned an order in their
+ * rank as they are first visited.
+ *
+ * This approach comes from Gansner, et al., "A Technique for Drawing Directed
+ * Graphs."
+ *
+ * Returns a layering matrix with an array per layer and each layer sorted by
+ * the order of its nodes.
+ */
+function initOrder(graph) {
+    var visited = {};
+    var nodesWithoutChildren = graph.nodeObjects.filter(function (node) { return !Object.keys(node.children).length; });
+    var maxRank = Math.max.apply(Math, nodesWithoutChildren.map(function (node) { var _a; return _a = node.rank, (_a !== null && _a !== void 0 ? _a : 0); }));
+    var layers = [];
+    for (var i = 0; i < maxRank + 1; i++) {
+        layers.push([]);
+    }
+    function dfs(node) {
+        var _a;
+        if (visited[node.id]) {
+            return;
+        }
+        visited[node.id] = true;
+        layers[_a = node.rank, (_a !== null && _a !== void 0 ? _a : 0)].push(node.id);
+        for (var _i = 0, _b = graph.successors(node.id); _i < _b.length; _i++) {
+            var successor = _b[_i];
+            dfs(graph.node(successor));
+        }
+    }
+    var orderedNodes = nodesWithoutChildren.sort(function (a, b) { var _a, _b; return (_a = a.rank, (_a !== null && _a !== void 0 ? _a : 0)) - (_b = b.rank, (_b !== null && _b !== void 0 ? _b : 0)); });
+    for (var _i = 0, orderedNodes_1 = orderedNodes; _i < orderedNodes_1.length; _i++) {
+        var node = orderedNodes_1[_i];
+        dfs(node);
+    }
+    return layers;
+}
+//# sourceMappingURL=initOrder.js.map
+
+function assignOrder(graph, layering) {
+    for (var _i = 0, layering_1 = layering; _i < layering_1.length; _i++) {
+        var layer = layering_1[_i];
+        for (var order_1 in layer) {
+            if (layer.hasOwnProperty(order_1)) {
+                graph.node(layer[order_1]).order = Number(order_1);
+            }
+        }
+    }
+}
+function order(graph) {
+    var rank = maxRank(graph);
+    var layering = initOrder(graph);
+    assignOrder(graph, layering);
+}
+//# sourceMappingURL=order.js.map
+
+function positionY(graph) {
+    var layers = buildLayerMatrix(graph);
+    var rankSep = /*graph.graph?.ranksep*/ 0;
+    var prevY = 0;
+    console.log('vertical layer matrix', layers);
+    for (var _i = 0, layers_1 = layers; _i < layers_1.length; _i++) {
+        var layer = layers_1[_i];
+        var maxHeight = Math.max.apply(Math, layer.map(function (id) { return graph.node(id).height; }));
+        for (var _a = 0, layer_1 = layer; _a < layer_1.length; _a++) {
+            var id = layer_1[_a];
+            graph.node(id).y = prevY + maxHeight / 2;
+        }
+        prevY += maxHeight + rankSep;
+    }
+}
+function position(graph) {
+    positionY(graph);
+    // for (const iterator of positionX(graph)) {
+    // }
+}
+
 function layout(graph) {
     // const layoutGraph = buildLayoutGraph(graph)
     _layout(graph);
@@ -620,6 +678,7 @@ function layout(graph) {
 }
 function _layout(graph) {
     rank(graph);
+    order(graph);
     position(graph);
     // translateGraph(graph)
 }
