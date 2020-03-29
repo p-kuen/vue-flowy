@@ -10,8 +10,11 @@ export const VueFlowy = Vue.component('VueFlowy', {
     }
   },
   watch: {
-    'chart.elements': function() {
-      this.renderChart()
+    'chart.elements': {
+        handler: function() {
+            this.renderChart()
+        },
+        deep: true
     }
   },
   methods: {
