@@ -4,6 +4,8 @@ import {FlowElement, FlowElementEdgeOptions} from './FlowElement'
 import {select} from 'd3'
 
 export interface FlowChartElementOptions {
+  labelStyle?: string
+  style?: string
   label?: string
 }
 
@@ -58,9 +60,17 @@ export class FlowChart {
       const elData: FlowChartElementOptions = {
         label: el.id
       }
-
-      if (el.options && el.options.label) {
-        elData.label = el.options.label
+      // use options
+      if (el.options) {
+        if (el.options.label) {
+          elData.label = el.options.label
+        }
+        if (el.options.style) {
+          elData.style = el.options.style
+        }
+        if (el.options.labelStyle) {
+          elData.labelStyle = el.options.labelStyle
+        }
       }
       g.setNode(el.id, elData)
       const node = g.node(el.id)
@@ -72,9 +82,22 @@ export class FlowChart {
       for (const k in el.edges) {
         const edge = el.edges[k]
         const edgeData: FlowElementEdgeOptions = {}
-
-        if (edge.options && edge.options.label) {
-          edgeData.label = edge.options.label
+        if (edge.options) {
+          if (edge.options.label) {
+            edgeData.label = edge.options.label
+          }
+          if (edge.options.style) {
+            edgeData.style  = edge.options.style
+          }
+          if (edge.options.labelStyle) {
+            edgeData.labelStyle  = edge.options.labelStyle
+          }
+          if (edge.options.arrowheadStyle) {
+            edgeData.arrowheadStyle = edge.options.arrowheadStyle
+          }
+          if (edge.options.curve) {
+            edgeData.curve = edge.options.curve
+          }
         }
 
         g.setEdge(el.id, edge.otherId, edgeData)
