@@ -1,10 +1,9 @@
-import { Selection } from "d3";
+import {Selection} from 'd3-selection'
 import Graph from './Graph'
-import { createNodes, positionNodes } from "./render/nodes";
-import layout from "./layout";
+import {createNodes, positionNodes} from './render/nodes'
+import layout from './layout'
 
 export class Renderer<T extends string> {
-
   graph: Graph<T>
 
   constructor(graph: Graph<T>) {
@@ -17,7 +16,7 @@ export class Renderer<T extends string> {
       console.log('TODO: do pre-processing.')
     }
   }
-  
+
   render(element: Selection<any, any, any, any>, graph: Graph<T>) {
     // delete everything from element
     element.selectAll().remove()

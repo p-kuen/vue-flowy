@@ -3,7 +3,7 @@
 import {FlowElement, FlowElementEdgeOptions} from './FlowElement'
 import {select} from 'd3-selection'
 import Graph from './Graph'
-import { Renderer } from './Renderer'
+import {Renderer} from './Renderer'
 
 export interface FlowChartElementOptions {
   label?: string
@@ -19,7 +19,6 @@ export default class FlowChart {
   }
   elements: FlowElement[] = []
 
-
   constructor(options?: FlowChartOptions) {
     this.options = Object.assign(this.options, options)
   }
@@ -32,7 +31,9 @@ export default class FlowChart {
   }
 
   destroy() {
-    this.elements.forEach((element) => { element.unregister() })
+    this.elements.forEach(element => {
+      element.unregister()
+    })
   }
 
   render(element: HTMLElement) {
@@ -45,20 +46,18 @@ export default class FlowChart {
 
     const svgGroup = svg.append('g')
 
-
     // Create the input graph
     const g = new Graph({
       multigraph: true,
       compound: true
+    }).setGraph({
+      rankdir: this.options.direction,
+      marginx: 20,
+      marginy: 20
     })
-      .setGraph({
-        rankdir: this.options.direction,
-        marginx: 20,
-        marginy: 20
-      })
-      // .setDefaultEdgeLabel(function () {
-      //   return {}
-      // })
+    // .setDefaultEdgeLabel(function () {
+    //   return {}
+    // })
 
     // first create all nodes
     for (const i in this.elements) {
@@ -75,6 +74,8 @@ export default class FlowChart {
 
       // apply some styles
       node.rx = node.ry = 5
+
+      console.log('create edges', el.edges)
 
       // now create all edges
       for (const k in el.edges) {

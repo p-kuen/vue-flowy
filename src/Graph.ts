@@ -1,4 +1,5 @@
-import { BaseType } from "d3"
+import {BaseType, select} from 'd3-selection'
+import {Renderer} from './Renderer'
 
 interface GraphOptions {
   directed?: boolean
@@ -21,6 +22,7 @@ export interface NodeOptions {
 }
 
 export interface InternalNodeOptions<T extends string> {
+  id: T
   width: number
   height: number
   x: number
@@ -30,7 +32,7 @@ export interface InternalNodeOptions<T extends string> {
     right: number
     top: number
     bottom: number
-  },
+  }
   parent?: T
   children: Record<string, any>
   inEdges: Record<string, Edge<T>>
@@ -65,9 +67,9 @@ const delimiter = '\x01'
 
 function edgeArgsToId<T extends string>(directed: boolean, fromId: T, toId: T, name?: string) {
   if (!directed && fromId > toId) {
-    const tmp = fromId;
-    fromId = toId;
-    toId = fromId;
+    const tmp = fromId
+    fromId = toId
+    toId = fromId
   }
 
   return fromId + delimiter + toId + delimiter + (name || '')
@@ -93,6 +95,7 @@ export default class Graph<T extends string> {
 
   setNode(id: T, options: NodeOptions) {
     const defaultOptions: InternalNodeOptions<T> = {
+      id,
       x: 0,
       y: 0,
       width: 10,
@@ -112,11 +115,17 @@ export default class Graph<T extends string> {
       order: 0
     }
 
+    console.log('add node', id, options)
+
     this.nodes[id] = Object.assign(defaultOptions, options)
-    return this
+    return this.nodes[id]
   }
 
   node(id: T) {
+    if (!this.nodes[id]) {
+      throw new Error(`Node with id ${id} does not exist!`)
+    }
+
     return this.nodes[id]
   }
 
@@ -208,7 +217,7 @@ export default class Graph<T extends string> {
   hasEdge(fromId: T, toId: T, name?: string) {
     const edgeId = edgeArgsToId(this.directed, fromId, toId, name)
     return this.edges[edgeId] !== undefined
-  };
+  }
 
   predecessors(id: T) {
     const nodes = this.node(id).predecessors
@@ -233,5 +242,11 @@ export default class Graph<T extends string> {
 
   createEdgeId<F, To>(fromId: F, toId: To) {
     return fromId + delimiter + toId
+  }
+
+  render(element: HTMLElement) {
+    const d3Element = select(element)
+    const renderer = new Renderer(this)
+    renderer.render(d3Element, this)
   }
 }
