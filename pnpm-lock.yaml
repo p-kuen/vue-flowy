@@ -1,9 +1,11 @@
 dependencies:
   d3-selection: 1.4.1
+  uuid: 8.0.0
   vue: 2.6.11
 devDependencies:
   '@rollup/plugin-commonjs': 11.1.0_rollup@2.7.2
   '@types/d3-selection': 1.4.1
+  '@types/uuid': 7.0.3
   rollup: 2.7.2
   rollup-plugin-typescript2: 0.27.0_rollup@2.7.2+typescript@3.8.3
   rollup-plugin-vue: 5.1.6_vue-template-compiler@2.6.11
@@ -62,6 +64,10 @@ packages:
     dev: true
     resolution:
       integrity: sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
+  /@types/uuid/7.0.3:
+    dev: true
+    resolution:
+      integrity: sha512-PUdqTZVrNYTNcIhLHkiaYzoOIaUi5LFg/XLerAdgvwQrUCx+oSbtoBze1AMyvYbcwzUSNC+Isl58SM4Sm/6COw==
   /@vue/component-compiler-utils/3.1.2:
     dependencies:
       consolidate: 0.15.1
@@ -1808,6 +1814,11 @@ packages:
     optional: true
     resolution:
       integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
+  /uuid/8.0.0:
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha512-jOXGuXZAWdsTH7eZLtyXMqUb9EcWMGZNbL9YcGBJl4MH4nrxHmZJhEHvyLFrkxo+28uLb/NYRcStH48fnD0Vzw==
   /verror/1.10.0:
     dependencies:
       assert-plus: 1.0.0
@@ -1888,11 +1899,13 @@ packages:
 specifiers:
   '@rollup/plugin-commonjs': ^11.1.0
   '@types/d3-selection': ^1.4.1
+  '@types/uuid': ^7.0.3
   d3-selection: ^1.4.1
   rollup: ^2.7.2
   rollup-plugin-typescript2: ^0.27.0
   rollup-plugin-vue: 5.1.6
   tslib: ^1.11.1
   typescript: ^3.8.3
+  uuid: ^8.0.0
   vue: ^2.6.11
   vue-template-compiler: ^2.6.11

@@ -1,4 +1,4 @@
-import {Selection} from 'd3-selection'
+import {select} from 'd3-selection'
 import Graph from './Graph'
 import {createNodes, positionNodes} from './render/nodes'
 import layout from './layout'
@@ -17,13 +17,15 @@ export class Renderer<T extends string> {
     }
   }
 
-  render(element: Selection<any, any, any, any>, graph: Graph<T>) {
-    // delete everything from element
-    element.selectAll().remove()
+  render(element: Element) {
+    const d3Element = select(element)
 
-    const nodes = createNodes(element.append('g').attr('class', 'nodes'), graph)
-    layout(graph)
-    positionNodes(nodes, graph)
+    // delete everything from element
+    d3Element.selectAll().remove()
+
+    const nodes = createNodes(d3Element.append('g').attr('class', 'nodes'), this.graph)
+    layout(this.graph)
+    positionNodes(nodes, this.graph)
   }
 
   // createOrSelectGroup(root, name) {

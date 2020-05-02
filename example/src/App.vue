@@ -10,6 +10,7 @@
 import Vue from 'vue'
 import VueFlowy from '../../build/VueFlowy'
 import Graph from '../../build/Graph'
+import {Renderer} from '../../build/renderer'
 // import {VueFlowy, FlowChart} from '../../build/main'
 
 export default Vue.extend({
@@ -24,6 +25,7 @@ export default Vue.extend({
   },
   mounted() {
     const g = new Graph()
+    const r = new Renderer(g)
 
     const idea = g.setNode('idea', {label: 'idea'})
     const A = g.setNode('A', {label: 'vscode'})
@@ -35,7 +37,7 @@ export default Vue.extend({
 
     const ref = this.$refs.test as HTMLElement
 
-    g.render(ref)
+    r.render(ref)
 
     // const renderer = new Renderer(g);
 

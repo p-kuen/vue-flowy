@@ -1,5 +1,4 @@
-import {BaseType, select} from 'd3-selection'
-import {Renderer} from './Renderer'
+import {BaseType} from 'd3-selection'
 
 interface GraphOptions {
   directed?: boolean
@@ -19,6 +18,7 @@ export interface NodeOptions {
   shape?: 'rect' | 'circle'
   rx?: number
   ry?: number
+  dummy?: string
 }
 
 export interface InternalNodeOptions<T extends string> {
@@ -34,7 +34,7 @@ export interface InternalNodeOptions<T extends string> {
     bottom: number
   }
   parent?: T
-  children: Record<string, any>
+  children: Record<string, Node<T>>
   inEdges: Record<string, Edge<T>>
   outEdges: Record<string, Edge<T>>
   predecessors: Record<string, Record<T, any>>
@@ -61,13 +61,12 @@ interface InternalEdgeOptions<T extends string> {
   cutvalue?: number
 }
 
-type Edge<T extends string> = EdgeOptions & InternalEdgeOptions<T>
+export type Edge<T extends string> = EdgeOptions & InternalEdgeOptions<T>
 
 const delimiter = '\x01'
 
 function edgeArgsToId<T extends string>(directed: boolean, fromId: T, toId: T, name?: string) {
   if (!directed && fromId > toId) {
-    const tmp = fromId
     fromId = toId
     toId = fromId
   }
@@ -77,7 +76,6 @@ function edgeArgsToId<T extends string>(directed: boolean, fromId: T, toId: T, n
 
 export default class Graph<T extends string> {
   public directed: boolean
-  private compound: boolean
 
   public graph?: GraphObject
   public nodes = {} as Record<T, Node<T>>
@@ -85,7 +83,6 @@ export default class Graph<T extends string> {
 
   constructor(options?: GraphOptions) {
     this.directed = options?.directed ?? false
-    this.compound = options?.compound ?? false
   }
 
   setGraph(graph: GraphObject) {
@@ -242,11 +239,5 @@ export default class Graph<T extends string> {
 
   createEdgeId<F, To>(fromId: F, toId: To) {
     return fromId + delimiter + toId
-  }
-
-  render(element: HTMLElement) {
-    const d3Element = select(element)
-    const renderer = new Renderer(this)
-    renderer.render(d3Element, this)
   }
 }

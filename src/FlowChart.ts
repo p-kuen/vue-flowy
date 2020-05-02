@@ -92,8 +92,14 @@ export default class FlowChart {
 
     const renderer = new Renderer(g)
 
-    const e = select('#f' + element.id + ' g')
-    renderer.render(e, g)
+    const selector = `#f${element.id} g`
+    const e = document.querySelector(selector)
+
+    if (!e) {
+      throw new Error(`Could not found element with selector '${selector}'`)
+    }
+
+    renderer.render(e)
     const svgElement = document.getElementById('f' + element.id)
 
     // now add the listeners after render
