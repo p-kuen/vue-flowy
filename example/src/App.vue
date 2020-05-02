@@ -27,7 +27,11 @@ export default Vue.extend({
 
     const idea = g.setNode('idea', {label: 'idea'})
     const A = g.setNode('A', {label: 'vscode'})
+    const B = g.setNode('B', {label: 'github'})
+    const C = g.setNode('C', {label: 'npm'})
     g.setEdge('idea', 'A', {})
+    g.setEdge('A', 'B', {})
+    g.setEdge('A', 'C', {})
 
     const ref = this.$refs.test as HTMLElement
 
