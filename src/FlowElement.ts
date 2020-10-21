@@ -1,7 +1,13 @@
 import { FlowChartElementOptions } from './FlowChart';
+import {curveBasis} from 'd3'
+import {CurveFactory} from 'd3-shape'
 
 export interface FlowElementEdgeOptions {
-  label?: string
+  label?: string  
+  style?: string
+  labelStyle?: string
+  arrowheadStyle?: string
+  curve?: CurveFactory
 }
 
 export interface FlowElementEdge {
