@@ -2,8 +2,8 @@
 // import Graph from './Graph'
 import {FlowElement, FlowElementEdgeOptions} from './FlowElement'
 import {select} from 'd3-selection'
-import Graph, { NodeOptions } from './Graph'
-import { Renderer } from './Renderer'
+import Graph, {NodeOptions} from './Graph'
+import {Renderer} from './Renderer'
 
 export interface FlowChartOptions {
   direction: 'LR' | 'TB' | 'BT' | 'RL'
@@ -14,7 +14,6 @@ export default class FlowChart {
     direction: 'LR'
   }
   elements: FlowElement[] = []
-
 
   constructor(options?: FlowChartOptions) {
     this.options = Object.assign(this.options, options)
@@ -28,7 +27,9 @@ export default class FlowChart {
   }
 
   destroy() {
-    this.elements.forEach((element) => { element.unregister() })
+    this.elements.forEach(element => {
+      element.unregister()
+    })
   }
 
   render(element: HTMLElement) {
@@ -41,20 +42,18 @@ export default class FlowChart {
 
     const svgGroup = svg.append('g')
 
-
     // Create the input graph
     const g = new Graph({
       multigraph: true,
       compound: true
+    }).setGraph({
+      rankdir: this.options.direction,
+      marginx: 20,
+      marginy: 20
     })
-      .setGraph({
-        rankdir: this.options.direction,
-        marginx: 20,
-        marginy: 20
-      })
-      // .setDefaultEdgeLabel(function () {
-      //   return {}
-      // })
+    // .setDefaultEdgeLabel(function () {
+    //   return {}
+    // })
 
     // first create all nodes
     for (const i in this.elements) {
@@ -69,26 +68,32 @@ export default class FlowChart {
         elData.label = el.options.label
       }
       g.setNode(el.id, elData)
-    }
 
-    for (const el of this.elements) {
+      console.log('create edges', el.edges)
+
       // now create all edges
       for (const k in el.edges) {
         const edge = el.edges[k]
         const edgeData: FlowElementEdgeOptions = {}
-  
+
         if (edge.options && edge.options.label) {
           edgeData.label = edge.options.label
         }
-  
+
         g.setEdge(el.id, edge.otherId, edgeData)
       }
     }
 
     const renderer = new Renderer(g)
 
-    const e = select('#f' + element.id + ' g')
-    renderer.render(e, g)
+    const selector = `#f${element.id} g`
+    const e = document.querySelector(selector)
+
+    if (!e) {
+      throw new Error(`Could not found element with selector '${selector}'`)
+    }
+
+    renderer.render(e)
     const svgElement = document.getElementById('f' + element.id)
 
     // now add the listeners after render

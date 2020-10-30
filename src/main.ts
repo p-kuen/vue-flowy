@@ -1,7 +1,8 @@
 import {VueConstructor} from 'vue'
 import VueFlowy from './VueFlowy'
 import FlowChart from './FlowChart'
-export {FlowChart, VueFlowy}
+import Graph from './Graph'
+export {FlowChart, VueFlowy, Graph}
 
 export default {
   install(Vue: VueConstructor, options: any) {

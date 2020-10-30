@@ -1,10 +1,9 @@
-import { Selection } from "d3";
+import {select} from 'd3-selection'
 import Graph from './Graph'
-import { createNodes, positionNodes } from "./render/nodes";
-import layout from "./layout";
+import {createNodes, positionNodes} from './render/nodes'
+import layout from './layout'
 
 export class Renderer<T extends string> {
-
   graph: Graph<T>
 
   constructor(graph: Graph<T>) {
@@ -17,14 +16,16 @@ export class Renderer<T extends string> {
       console.log('TODO: do pre-processing.')
     }
   }
-  
-  render(element: Selection<any, any, any, any>, graph: Graph<T>) {
-    // delete everything from element
-    element.selectAll().remove()
 
-    const nodes = createNodes(element.append('g').attr('class', 'nodes'), graph)
-    layout(graph)
-    positionNodes(nodes, graph)
+  render(element: Element) {
+    const d3Element = select(element)
+
+    // delete everything from element
+    d3Element.selectAll().remove()
+
+    const nodes = createNodes(d3Element.append('g').attr('class', 'nodes'), this.graph)
+    layout(this.graph)
+    positionNodes(nodes, this.graph)
   }
 
   // createOrSelectGroup(root, name) {

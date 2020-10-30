@@ -1,5 +1,5 @@
-import Graph from "@/Graph";
-import { buildLayerMatrix } from "./util";
+import Graph from '@/Graph'
+import {buildLayerMatrix} from './util'
 
 // function balance(xss, align) {
 
@@ -12,7 +12,7 @@ function positionX<T extends string>(graph: Graph<T>) {
 
   for (const vertical of ['u', 'd']) {
     for (const horizontal of ['l', 'r']) {
-      // const xs = 
+      // const xs =
       // xss[vertical + horizontal] = xs
     }
   }
@@ -21,9 +21,9 @@ function positionX<T extends string>(graph: Graph<T>) {
 }
 
 function positionY<T extends string>(graph: Graph<T>) {
-  var layers = buildLayerMatrix(graph);
-  var rankSep = /*graph.graph?.ranksep*/ 0;
-  var prevY = 0;
+  var layers = buildLayerMatrix(graph)
+  var rankSep = /*graph.graph?.ranksep*/ 0
+  var prevY = 0
 
   console.log('vertical layer matrix', layers)
 
@@ -36,10 +36,9 @@ function positionY<T extends string>(graph: Graph<T>) {
   }
 }
 
-export default function position<T extends string>(graph: Graph<T>) {
-
+export function position<T extends string>(graph: Graph<T>) {
   positionY(graph)
   // for (const iterator of positionX(graph)) {
-    
+
   // }
 }

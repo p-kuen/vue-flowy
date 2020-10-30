@@ -1,10 +1,15 @@
-import Graph from "./Graph"
-import rank from "./layout/rank"
-import order from "./layout/order"
-import position from "./layout/position"
+import Graph from './Graph'
+import {position} from './layout/position'
+import rank from './layout/rank'
+import {buildNestedGraph} from './layout/nestingGraph'
+import order from './layout/order'
+
+function buildLayoutGraph(graph: Graph<string>) {
+  const layoutGraph = new Graph({multigraph: true, compound: true})
+}
 
 export default function layout<T extends string>(graph: Graph<T>) {
-  // const layoutGraph = buildLayoutGraph(graph)
+  const layoutGraph = buildLayoutGraph(graph)
   _layout(graph)
   // updateInputGraph(graph, layoutGraph)
 }
@@ -12,9 +17,9 @@ export default function layout<T extends string>(graph: Graph<T>) {
 function _layout<T extends string>(graph: Graph<T>) {
   rank(graph)
   order(graph)
+  buildNestedGraph(graph)
   position(graph)
   // translateGraph(graph)
-
 }
 
 /*

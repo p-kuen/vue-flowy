@@ -1,4 +1,4 @@
-import { BaseType } from "d3"
+import {BaseType} from 'd3-selection'
 
 interface GraphOptions {
   directed?: boolean
@@ -18,6 +18,7 @@ export interface NodeOptions {
   shape?: 'rect' | 'circle'
   rx?: number
   ry?: number
+  dummy?: string
 }
 
 export interface InternalNodeOptions<T extends string> {
@@ -31,9 +32,9 @@ export interface InternalNodeOptions<T extends string> {
     right: number
     top: number
     bottom: number
-  },
+  }
   parent?: T
-  children: Record<string, any>
+  children: Record<string, Node<T>>
   inEdges: Record<string, Edge<T>>
   outEdges: Record<string, Edge<T>>
   predecessors: Record<string, Record<T, any>>
@@ -60,15 +61,14 @@ interface InternalEdgeOptions<T extends string> {
   cutvalue?: number
 }
 
-type Edge<T extends string> = EdgeOptions & InternalEdgeOptions<T>
+export type Edge<T extends string> = EdgeOptions & InternalEdgeOptions<T>
 
 const delimiter = '\x01'
 
 function edgeArgsToId<T extends string>(directed: boolean, fromId: T, toId: T, name?: string) {
   if (!directed && fromId > toId) {
-    const tmp = fromId;
-    fromId = toId;
-    toId = fromId;
+    fromId = toId
+    toId = fromId
   }
 
   return fromId + delimiter + toId + delimiter + (name || '')
@@ -76,7 +76,6 @@ function edgeArgsToId<T extends string>(directed: boolean, fromId: T, toId: T, n
 
 export default class Graph<T extends string> {
   public directed: boolean
-  private compound: boolean
 
   public graph?: GraphObject
   public nodes = {} as Record<T, Node<T>>
@@ -84,7 +83,6 @@ export default class Graph<T extends string> {
 
   constructor(options?: GraphOptions) {
     this.directed = options?.directed ?? false
-    this.compound = options?.compound ?? false
   }
 
   setGraph(graph: GraphObject) {
@@ -114,11 +112,17 @@ export default class Graph<T extends string> {
       order: 0
     }
 
+    console.log('add node', id, options)
+
     this.nodes[id] = Object.assign(defaultOptions, options)
-    return this
+    return this.nodes[id]
   }
 
   node(id: T) {
+    if (!this.nodes[id]) {
+      throw new Error(`Node with id ${id} does not exist!`)
+    }
+
     return this.nodes[id]
   }
 
@@ -210,7 +214,7 @@ export default class Graph<T extends string> {
   hasEdge(fromId: T, toId: T, name?: string) {
     const edgeId = edgeArgsToId(this.directed, fromId, toId, name)
     return this.edges[edgeId] !== undefined
-  };
+  }
 
   predecessors(id: T) {
     const nodes = this.node(id).predecessors
