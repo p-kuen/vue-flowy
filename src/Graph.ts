@@ -21,8 +21,8 @@ export interface NodeOptions {
   dummy?: string
 }
 
-export interface InternalNodeOptions<T extends string> {
-  id: T
+export interface InternalNodeOptions {
+  id: string
   width: number
   height: number
   x: number
@@ -33,12 +33,12 @@ export interface InternalNodeOptions<T extends string> {
     top: number
     bottom: number
   }
-  parent?: T
-  children: Record<string, Node<T>>
-  inEdges: Record<string, Edge<T>>
-  outEdges: Record<string, Edge<T>>
-  predecessors: Record<string, Record<T, any>>
-  successors: Record<string, Record<T, any>>
+  parent?: string
+  children: Record<string, Node>
+  inEdges: Record<string, Edge>
+  outEdges: Record<string, Edge>
+  predecessors: Record<string, Record<string, any>>
+  successors: Record<string, Record<string, any>>
   labelType: 'svg' | 'html' | 'text'
   svg?: BaseType
   rank?: number
@@ -47,21 +47,21 @@ export interface InternalNodeOptions<T extends string> {
   lim?: number
 }
 
-export type Node<T extends string> = NodeOptions & InternalNodeOptions<T>
+export type Node = NodeOptions & InternalNodeOptions
 
 export interface EdgeOptions {
   label?: string
 }
 
-interface InternalEdgeOptions<T extends string> {
-  fromId: T
-  toId: T
+interface InternalEdgeOptions {
+  fromId: string
+  toId: string
   minlen: number
   weight: number
   cutvalue?: number
 }
 
-export type Edge<T extends string> = EdgeOptions & InternalEdgeOptions<T>
+export type Edge = EdgeOptions & InternalEdgeOptions
 
 const delimiter = '\x01'
 
@@ -74,12 +74,12 @@ function edgeArgsToId<T extends string>(directed: boolean, fromId: T, toId: T, n
   return fromId + delimiter + toId + delimiter + (name || '')
 }
 
-export default class Graph<T extends string> {
+export default class Graph {
   public directed: boolean
 
   public graph?: GraphObject
-  public nodes = {} as Record<T, Node<T>>
-  private edges: Record<string, Edge<T>> = {}
+  public nodes = {} as Record<string, Node>
+  private edges: Record<string, Edge> = {}
 
   constructor(options?: GraphOptions) {
     this.directed = options?.directed ?? false
@@ -90,8 +90,8 @@ export default class Graph<T extends string> {
     return this
   }
 
-  setNode(id: T, options: NodeOptions) {
-    const defaultOptions: InternalNodeOptions<T> = {
+  setNode(id: string, options: NodeOptions) {
+    const defaultOptions: InternalNodeOptions = {
       id,
       x: 0,
       y: 0,
@@ -118,7 +118,7 @@ export default class Graph<T extends string> {
     return this.nodes[id]
   }
 
-  node(id: T) {
+  node(id: string) {
     if (!this.nodes[id]) {
       throw new Error(`Node with id ${id} does not exist!`)
     }
@@ -126,25 +126,25 @@ export default class Graph<T extends string> {
     return this.nodes[id]
   }
 
-  hasNode(id: T) {
+  hasNode(id: string) {
     return this.nodes[id] !== undefined
   }
 
   get nodeIds() {
-    return Object.keys(this.nodes) as Array<T>
+    return Object.keys(this.nodes)
   }
 
   get nodeObjects() {
-    return Object.values<Node<T>>(this.nodes)
+    return Object.values(this.nodes)
   }
 
-  setEdge(fromId: T, toId: T, options: EdgeOptions) {
+  setEdge(fromId: string, toId: string, options: EdgeOptions) {
     const id = this.createEdgeId(fromId, toId)
 
     const fromNode = this.node(fromId)
     const toNode = this.node(toId)
 
-    const defaultOptions: InternalEdgeOptions<T> = {
+    const defaultOptions: InternalEdgeOptions = {
       fromId,
       toId,
       minlen: 0,
@@ -159,7 +159,7 @@ export default class Graph<T extends string> {
     this.edges[id] = edgeObject
   }
 
-  edge(childId: T, parentId: T, name?: string) {
+  edge(childId: string, parentId: string, name?: string) {
     const edgeId = edgeArgsToId(this.directed, childId, parentId, name)
     return this.edges[edgeId]
   }
@@ -172,7 +172,7 @@ export default class Graph<T extends string> {
     return Object.values(this.edges)
   }
 
-  inEdgeObjects(id: T, fromId?: T) {
+  inEdgeObjects(id: string, fromId?: string) {
     const inEdges = this.nodes[id].inEdges
 
     if (!inEdges) {
@@ -188,7 +188,7 @@ export default class Graph<T extends string> {
     return inEdgeObjects.filter(edge => edge.fromId === fromId)
   }
 
-  outEdgeObjects(id: T, toId?: T) {
+  outEdgeObjects(id: string, toId?: string) {
     const outEdges = this.nodes[id].outEdges
 
     if (!outEdges) {
@@ -204,29 +204,29 @@ export default class Graph<T extends string> {
     return outEdgeObjects.filter(edge => edge.toId === toId)
   }
 
-  nodeEdgeObjects(fromId: T, toId?: T) {
+  nodeEdgeObjects(fromId: string, toId?: string) {
     const inEdges = this.inEdgeObjects(fromId, toId)
     const outEdges = this.outEdgeObjects(fromId, toId)
 
     return inEdges.concat(outEdges)
   }
 
-  hasEdge(fromId: T, toId: T, name?: string) {
+  hasEdge(fromId: string, toId: string, name?: string) {
     const edgeId = edgeArgsToId(this.directed, fromId, toId, name)
     return this.edges[edgeId] !== undefined
   }
 
-  predecessors(id: T) {
+  predecessors(id: string) {
     const nodes = this.node(id).predecessors
-    return Object.keys(nodes) as T[]
+    return Object.keys(nodes)
   }
 
-  successors(id: T) {
+  successors(id: string) {
     const nodes = this.node(id).successors
-    return Object.keys(nodes) as T[]
+    return Object.keys(nodes)
   }
 
-  neighbors(id: T) {
+  neighbors(id: string) {
     const predecessors = this.predecessors(id)
     const successors = this.successors(id)
 
