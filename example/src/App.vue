@@ -1,61 +1,55 @@
 <template>
   <div id="app">
     <h2>Without direction</h2>
-    <vue-flowy :chart="chart"></vue-flowy>
-    <vue-flowy-legacy class="legacy" :chart="legacyChart"></vue-flowy-legacy>
+    <div class="test" ref="test"></div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
-import VueFlowy from '../../build/VueFlowy'
-import FlowChart from '../../build/FlowChart'
-import {VueFlowy as VueFlowyLegacy, FlowChart as FlowChartLegacy} from 'vue-flowy'
-import Graph from '../../build/Graph'
-import {Renderer} from '../../build/renderer'
-// import {VueFlowy, FlowChart} from '../../build/main'
+import {render as Renderer} from 'dagre-d3'
+import {Graph} from 'graphlib'
+import { select } from 'd3-selection';
 
 export default Vue.extend({
   name: 'App',
-  components: {
-    VueFlowy,
-    VueFlowyLegacy
-  },
   data() {
     return {
-      chart: new FlowChart({ direction: "LR" }),
-      legacyChart: new FlowChartLegacy({direction: 'LR'})
+      dagreChart: new Graph()
     };
   },
+  created() {
+    this.dagreChart.setGraph({})
+
+    // dagre flow chart
+    this.dagreChart.setNode('idea', {label: 'idea'})
+    this.dagreChart.setNode('A', {label: 'vscode'})
+    this.dagreChart.setNode('B', {label: 'github'})
+    this.dagreChart.setNode('C', {label: 'npm'})
+
+    this.dagreChart.setEdge('idea', 'A', {label: 'test'}).setEdge('idea', 'B', {label: 'test'})
+    this.dagreChart.setEdge('A', 'C', {label: 'test'})
+  },
   mounted() {
-    const g = new Graph()
-    const r = new Renderer(g)
-
-    const idea = g.setNode('idea', {label: 'idea'})
-    const A = g.setNode('A', {label: 'vscode'})
-    const B = g.setNode('B', {label: 'github'})
-    const C = g.setNode('C', {label: 'npm'})
-    g.setEdge('idea', 'A', {})
-    g.setEdge('A', 'B', {})
-    g.setEdge('A', 'C', {})
-
     const ref = this.$refs.test as HTMLElement
+    this.render(ref)
 
-    r.render(ref)
+  },
+  methods: {
+    render(root: HTMLElement) {
+      const svg = select(root)
+        .append('svg')
+        .attr('id', 'f' + root.id)
+        .attr('xmlns', 'http://www.w3.org/2000/svg')
+        .attr('width', 1000)
+        .attr('height', 600)
 
-    // const renderer = new Renderer(g);
+      const svgGroup = svg.append('g')
 
-    // first flowChart
-    // const idea = this.chart.addElement("idea");
-    // const A = this.chart.addElement("A", { label: "vscode" });
-    // const B = this.chart.addElement("B", { label: "github" });
-    // const C = this.chart.addElement("C", { label: "npm" });
-    // idea.leadsTo(A).leadsTo(B);
-    // A.leadsTo(C);
+      const renderer = new Renderer()
 
-    // A.on("click", function() {
-    //   console.log("click!");
-    // });
+      renderer(svgGroup, this.dagreChart)
+    }
   }
 })
 </script>
@@ -70,7 +64,18 @@ export default Vue.extend({
   margin-top: 60px;
 }
 
-.flow-chart > svg {
-  margin: 0 auto;
+.test .node rect,
+.test .node circle,
+.test .node ellipse,
+.test .node polygon {
+  stroke: #333;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+.test .edgePath path {
+  stroke: #333;
+  fill: #333;
+  stroke-width: 1.5px;
 }
 </style>
