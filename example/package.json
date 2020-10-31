@@ -8,15 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "tslib": "1.10.0",
-    "vue": "^2.6.11",
+    "tslib": "2.0.3",
+    "vue": "^2.6.12",
     "vue-flowy": "^0.3.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.1.2",
-    "@vue/cli-plugin-typescript": "^4.3.1",
-    "@vue/cli-service": "^4.1.2",
-    "vue-template-compiler": "^2.6.11"
+    "@vue/cli-plugin-babel": "^4.5.8",
+    "@vue/cli-plugin-typescript": "^4.5.8",
+    "@vue/cli-service": "^4.5.8",
+    "vue-template-compiler": "^2.6.12"
   },
   "browserslist": [
     "> 1%",
