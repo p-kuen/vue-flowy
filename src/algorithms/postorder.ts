@@ -1,6 +1,6 @@
-import Graph from "@/Graph"
+import Graph from '@/Graph'
 import dfs from './dfs'
 
-export default function postorder<T extends string>(graph: Graph<T>, ids: T[]) {
+export default function postorder(graph: Graph, ids: string[]) {
   return dfs(graph, ids, 'post')
 }

@@ -1,6 +1,6 @@
-import Graph from "@/Graph";
+import Graph from '@/Graph'
 
-export function feasibleTree<T extends string>(graph: Graph<T>) {
+export function feasibleTree(graph: Graph) {
   const t = new Graph({directed: false})
 
   const start = graph.nodeIds[0]

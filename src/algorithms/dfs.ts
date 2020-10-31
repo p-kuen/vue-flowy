@@ -1,12 +1,12 @@
 import Graph from '../Graph'
 
-function doDfs<T extends string>(
-  graph: Graph<T>,
-  id: T,
+function doDfs(
+  graph: Graph,
+  id: string,
   postorder: boolean,
-  visited: Record<T, true>,
+  visited: Record<string, true>,
   navigation: Function,
-  acc: T[]
+  acc: string[]
 ) {
   if (visited[id]) {
     return
@@ -35,15 +35,15 @@ function doDfs<T extends string>(
  *
  * Order must be one of "pre" or "post".
  */
-export default function dfs<T extends string>(graph: Graph<T>, ids: T[] | T, order: 'pre' | 'post') {
+export default function dfs(graph: Graph, ids: string[] | string, order: 'pre' | 'post') {
   if (!Array.isArray(ids)) {
     ids = []
   }
 
   const navigation = (graph.directed ? graph.successors : graph.neighbors).bind(graph)
 
-  const acc: T[] = []
-  const visited = {} as Record<T, true>
+  const acc: string[] = []
+  const visited = {} as Record<string, true>
 
   for (const id of ids) {
     if (!graph.hasNode(id)) {

@@ -4,17 +4,17 @@ import rank from './layout/rank'
 import {buildNestedGraph} from './layout/nestingGraph'
 import order from './layout/order'
 
-function buildLayoutGraph(graph: Graph<string>) {
+function buildLayoutGraph(graph: Graph) {
   const layoutGraph = new Graph({multigraph: true, compound: true})
 }
 
-export default function layout<T extends string>(graph: Graph<T>) {
+export default function layout(graph: Graph) {
   const layoutGraph = buildLayoutGraph(graph)
   _layout(graph)
   // updateInputGraph(graph, layoutGraph)
 }
 
-function _layout<T extends string>(graph: Graph<T>) {
+function _layout(graph: Graph) {
   rank(graph)
   order(graph)
   buildNestedGraph(graph)

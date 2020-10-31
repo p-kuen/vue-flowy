@@ -5,7 +5,7 @@ import {buildLayerMatrix} from './util'
 
 // }
 
-function positionX<T extends string>(graph: Graph<T>) {
+function positionX(graph: Graph) {
   const layering = buildLayerMatrix(graph)
 
   const xss = {}
@@ -20,7 +20,7 @@ function positionX<T extends string>(graph: Graph<T>) {
   return
 }
 
-function positionY<T extends string>(graph: Graph<T>) {
+function positionY(graph: Graph) {
   var layers = buildLayerMatrix(graph)
   var rankSep = /*graph.graph?.ranksep*/ 0
   var prevY = 0
@@ -36,7 +36,7 @@ function positionY<T extends string>(graph: Graph<T>) {
   }
 }
 
-export function position<T extends string>(graph: Graph<T>) {
+export function position(graph: Graph) {
   positionY(graph)
   // for (const iterator of positionX(graph)) {
 

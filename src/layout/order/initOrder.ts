@@ -1,4 +1,4 @@
-import Graph, {Node} from "@/Graph";
+import Graph, {Node} from '@/Graph'
 
 /*
  * Assigns an initial order value for each node by performing a DFS search
@@ -11,18 +11,18 @@ import Graph, {Node} from "@/Graph";
  * Returns a layering matrix with an array per layer and each layer sorted by
  * the order of its nodes.
  */
-export default function initOrder<T extends string>(graph: Graph<T>) {
-  const visited = {} as Record<T, true>
+export default function initOrder(graph: Graph) {
+  const visited = {} as Record<string, true>
 
   const nodesWithoutChildren = graph.nodeObjects.filter(node => !Object.keys(node.children).length)
   const maxRank = Math.max(...nodesWithoutChildren.map(node => node.rank ?? 0))
-  const layers: T[][] = []
+  const layers: string[][] = []
 
   for (let i = 0; i < maxRank + 1; i++) {
     layers.push([])
   }
 
-  function dfs(node: Node<T>) {
+  function dfs(node: Node) {
     if (visited[node.id]) {
       return
     }
@@ -35,7 +35,7 @@ export default function initOrder<T extends string>(graph: Graph<T>) {
     }
   }
 
-  const orderedNodes = nodesWithoutChildren.sort((a, b) =>( a.rank ?? 0) - (b.rank ?? 0))
+  const orderedNodes = nodesWithoutChildren.sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
 
   for (const node of orderedNodes) {
     dfs(node)

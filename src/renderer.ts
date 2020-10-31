@@ -3,10 +3,10 @@ import Graph from './Graph'
 import {createNodes, positionNodes} from './render/nodes'
 import layout from './layout'
 
-export class Renderer<T extends string> {
-  graph: Graph<T>
+export class Renderer {
+  graph: Graph
 
-  constructor(graph: Graph<T>) {
+  constructor(graph: Graph) {
     this.graph = graph
   }
 

@@ -1,7 +1,7 @@
 import {Node} from '@/Graph'
 import {SVGGElementSelection} from '@/types/d3-extra'
 
-export function addLabel<T extends string>(labelGroup: SVGGElementSelection, node: Node<T>) {
+export function addLabel(labelGroup: SVGGElementSelection, node: Node) {
   const labelText = node.label
   const svg = labelGroup.append('g')
 
@@ -21,11 +21,11 @@ export function addLabel<T extends string>(labelGroup: SVGGElementSelection, nod
   return svg
 }
 
-function addSvgLabel<T extends string>(svg: SVGGElementSelection, node: Node<T>) {
+function addSvgLabel(svg: SVGGElementSelection, node: Node) {
   // svg.node()?.appendChild(node.label!)
 }
 
-function addTextLabel<T extends string>(svg: SVGGElementSelection, node: Node<T>) {
+function addTextLabel(svg: SVGGElementSelection, node: Node) {
   if (!node.label) {
     throw new Error(`No label set for node '${node.id}'`)
   }

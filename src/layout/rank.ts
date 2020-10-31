@@ -1,5 +1,5 @@
-import Graph from "@/Graph";
-import networkSimplex from "./rank/network-simplex";
+import Graph from '@/Graph'
+import networkSimplex from './rank/network-simplex'
 
 /*
  * Assigns a rank to each node in the input graph that respects the "minlen"
@@ -20,11 +20,14 @@ import networkSimplex from "./rank/network-simplex";
  *       algorithm. Ranks can start at any index (including negative), we'll
  *       fix them up later.
  */
-export default function rank<T extends string>(graph: Graph<T>) {
-  switch(graph.graph?.ranker) {
-    case "network-simplex": networkSimplex(graph); break;
+export default function rank(graph: Graph) {
+  switch (graph.graph?.ranker) {
+    case 'network-simplex':
+      networkSimplex(graph)
+      break
     // case "tight-tree": tightTreeRanker(g); break;
     // case "longest-path": longestPathRanker(g); break;
-    default: networkSimplex(graph);
+    default:
+      networkSimplex(graph)
   }
 }

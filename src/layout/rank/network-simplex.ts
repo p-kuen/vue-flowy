@@ -6,17 +6,11 @@ import postorder from '@/algorithms/postorder'
 /*
  * Returns true if the edge is in the tree.
  */
-function isTreeEdge<T extends string>(tree: Graph<T>, preId: T, id: T) {
+function isTreeEdge<T extends string>(tree: Graph, preId: T, id: T) {
   return tree.hasEdge(preId, id)
 }
 
-function dfsAssignLowLim<T extends string>(
-  tree: Graph<T>,
-  visited: Record<T, boolean>,
-  nextLim: number,
-  id: T,
-  parent?: T
-) {
+function dfsAssignLowLim(tree: Graph, visited: Record<string, boolean>, nextLim: number, id: string, parent?: string) {
   const low = nextLim
   const node = tree.node(id)
 
@@ -39,18 +33,18 @@ function dfsAssignLowLim<T extends string>(
   return nextLim
 }
 
-function initLowLimValues<T extends string>(tree: Graph<T>, root?: T) {
+function initLowLimValues(tree: Graph, root?: string) {
   if (root === undefined) {
     root = tree.nodeIds[0]
   }
-  dfsAssignLowLim(tree, {} as Record<T, boolean>, 1, root)
+  dfsAssignLowLim(tree, {} as Record<string, boolean>, 1, root)
 }
 
 /*
  * Given the tight tree, its graph, and a child in the graph calculate and
  * return the cut value for the edge between the child and its parent.
  */
-function calcCutValue<T extends string>(tree: Graph<T>, graph: Graph<T>, child: T) {
+function calcCutValue(tree: Graph, graph: Graph, child: string) {
   var childLab = tree.node(child)
   var parent = childLab.parent
   // True if the child is on the tail end of the edge in the directed graph
@@ -86,7 +80,7 @@ function calcCutValue<T extends string>(tree: Graph<T>, graph: Graph<T>, child: 
   return cutValue
 }
 
-function assignCutValue<T extends string>(tree: Graph<T>, graph: Graph<T>, child: T) {
+function assignCutValue(tree: Graph, graph: Graph, child: string) {
   const childLab = tree.node(child)
   const parent = childLab.parent
   tree.edge(child, parent!).cutvalue = calcCutValue(tree, graph, child)
@@ -95,7 +89,7 @@ function assignCutValue<T extends string>(tree: Graph<T>, graph: Graph<T>, child
 /*
  * Initializes cut values for all edges in the tree.
  */
-function initCutValues<T extends string>(tree: Graph<T>, graph: Graph<T>) {
+function initCutValues(tree: Graph, graph: Graph) {
   var ids = postorder(tree, tree.nodeIds)
   ids = ids.slice(0, ids.length - 1)
 
@@ -104,7 +98,7 @@ function initCutValues<T extends string>(tree: Graph<T>, graph: Graph<T>) {
   }
 }
 
-function leaveEdge<T extends string>(tree: Graph<T>) {
+function leaveEdge(tree: Graph) {
   for (const edge of tree.edgeObjects) {
     if (edge.cutvalue !== undefined && edge.cutvalue < 0) {
       return edge
@@ -112,20 +106,20 @@ function leaveEdge<T extends string>(tree: Graph<T>) {
   }
 }
 
-// function isDescendant(tree: Graph<string>, node: ReturnType<typeof Graph.prototype.node>, rootNode: ReturnType<typeof Graph.prototype.node>) {
+// function isDescendant(tree: Graph, node: ReturnType<typeof Graph.prototype.node>, rootNode: ReturnType<typeof Graph.prototype.node>) {
 //   return rootNode.low <= node.lim && node.lim <= rootNode.lim
 // }
 
-function enterEdge(tree: Graph<string>, graph: Graph<string>, edge: ReturnType<typeof leaveEdge>) {
+function enterEdge(tree: Graph, graph: Graph, edge: ReturnType<typeof leaveEdge>) {
   const fromNode = graph.node(edge?.fromId!)
   const toNode = graph.node(edge?.toId!)
 
   // const candidates = graph.edgeObjects.filter(edge => )
 }
 
-function exchangeEdges(tree: Graph<string>, graph: Graph<string>, edge: ReturnType<typeof leaveEdge>) {}
+function exchangeEdges(tree: Graph, graph: Graph, edge: ReturnType<typeof leaveEdge>) {}
 
-export default function networkSimplex<T extends string>(graph: Graph<T>) {
+export default function networkSimplex(graph: Graph) {
   // g = simplify(g);
   longestPath(graph)
   const tree = feasibleTree(graph)

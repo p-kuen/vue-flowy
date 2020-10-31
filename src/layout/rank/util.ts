@@ -21,10 +21,10 @@ import Graph from '../../Graph'
  *
  *    1. Each node will be assigned an (unnormalized) "rank" property.
  */
-export function longestPath<T extends string>(graph: Graph<T>) {
-  const visited = {} as Record<T, true>
+export function longestPath(graph: Graph) {
+  const visited = {} as Record<string, true>
 
-  function dfs(id: T) {
+  function dfs(id: string) {
     const node = graph.node(id)
 
     if (visited[id]) {

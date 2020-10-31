@@ -1,8 +1,8 @@
-import Graph from "@/Graph";
-import { maxRank } from "./util";
-import initOrder from "./order/initOrder";
+import Graph from '@/Graph'
+import {maxRank} from './util'
+import initOrder from './order/initOrder'
 
-function assignOrder<T extends string>(graph: Graph<T>, layering: T[][]) {
+function assignOrder(graph: Graph, layering: string[][]) {
   for (const layer of layering) {
     for (const order in layer) {
       if (layer.hasOwnProperty(order)) {
@@ -12,7 +12,7 @@ function assignOrder<T extends string>(graph: Graph<T>, layering: T[][]) {
   }
 }
 
-export default function order<T extends string>(graph: Graph<T>) {
+export default function order(graph: Graph) {
   const rank = maxRank(graph)
 
   const layering = initOrder(graph)

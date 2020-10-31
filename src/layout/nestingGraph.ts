@@ -1,7 +1,7 @@
 import {addDummyNode} from './util'
 import {Graph} from '@/main'
 
-function treeDepths(graph: Graph<string>) {
+function treeDepths(graph: Graph) {
   const depths: Record<string, number> = {}
 
   function dfs(id: string, depth: number) {
@@ -19,7 +19,7 @@ function treeDepths(graph: Graph<string>) {
   return depths
 }
 
-export function buildNestedGraph(graph: Graph<string>) {
+export function buildNestedGraph(graph: Graph) {
   const root = addDummyNode(graph, 'root', {}, 'root')
   const depths = treeDepths(graph)
   const height = Math.max(...Object.values(depths)) - 1

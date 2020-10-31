@@ -4,7 +4,7 @@ import {select} from 'd3-selection'
 import {addLabel} from './label'
 import * as shapes from './shapes'
 
-export function createNodes<T extends string>(selection: AnySelection, graph: Graph<T>) {
+export function createNodes(selection: AnySelection, graph: Graph) {
   let nodeGroups = selection.selectAll('g.node').data(graph.nodeIds, (k: any) => k)
   nodeGroups.enter().append('g').attr('class', 'node')
 
@@ -39,7 +39,7 @@ export function createNodes<T extends string>(selection: AnySelection, graph: Gr
   return nodeGroups
 }
 
-export function positionNodes<T extends string>(selection: AnySelection, graph: Graph<T>) {
+export function positionNodes<T extends string>(selection: AnySelection, graph: Graph) {
   function translate(id: T) {
     const node = graph.node(id)
     return `translate(${node.x},${node.y})`
